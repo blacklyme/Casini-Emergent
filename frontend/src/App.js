@@ -749,12 +749,12 @@ const AboutSection = () => {
               Despre Noi
             </span>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1c1917]">
-              O Echipă de Femei Profesioniste
+              O Echipă Dedicată
             </h2>
             <p className="text-stone-600 leading-relaxed">
               Casini a fost fondată în 2003 și este una dintre cele mai respectate firme de 
-              contabilitate din Timișoara. Suntem o echipă formată preponderent din femei, 
-              dedicată excelenței în serviciile de contabilitate și consultanță fiscală.
+              contabilitate din Timișoara. Suntem o echipă profesionistă dedicată, care își 
+              aduce contribuția cu pasiune și expertiză în serviciile de contabilitate și consultanță fiscală.
             </p>
             <p className="text-stone-600 leading-relaxed">
               Cu peste 20 de ani de experiență, am construit relații de lungă durată cu 
