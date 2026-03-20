@@ -1,0 +1,151 @@
+{
+  "brand_identity": {
+    "name": "Casini",
+    "core_values": ["Trust", "Experience (20+ Years)", "Women-Led", "Precision", "Local Expertise (Timișoara)"],
+    "tone": "Professional, Elegant, Approachable, Authoritative",
+    "theme_mode": "light",
+    "archetype": "Jewel & Luxury (Adapted for Professional Services)"
+  },
+  "typography": {
+    "headings": {
+      "font_family": "Playfair Display, serif",
+      "usage": "Use for all H1-H3 headings. conveys tradition and elegance.",
+      "weights": ["600", "700"],
+      "letter_spacing": "tracking-tight"
+    },
+    "body": {
+      "font_family": "Manrope, sans-serif",
+      "usage": "Use for all body text, UI elements, and data tables.",
+      "weights": ["400", "500", "600"],
+      "letter_spacing": "tracking-normal"
+    },
+    "mono": {
+      "font_family": "JetBrains Mono, monospace",
+      "usage": "Use ONLY for numerical data in calculators and tax figures.",
+      "weights": ["400"]
+    }
+  },
+  "colors": {
+    "primary": {
+      "DEFAULT": "#134e4a",
+      "foreground": "#ffffff",
+      "description": "Deep Emerald/Teal - represents stability, growth, and wealth without being generic blue."
+    },
+    "secondary": {
+      "DEFAULT": "#d97706",
+      "foreground": "#ffffff",
+      "description": "Amber/Gold - accents for wealth and success."
+    },
+    "background": {
+      "DEFAULT": "#fafaf9",
+      "description": "Warm Stone/Alabaster - avoids clinical white, feels more premium."
+    },
+    "surface": {
+      "DEFAULT": "#ffffff",
+      "description": "Pure white for cards and input fields to create contrast against the warm background."
+    },
+    "text": {
+      "primary": "#1c1917",
+      "secondary": "#57534e",
+      "muted": "#a8a29e"
+    },
+    "accent": {
+      "DEFAULT": "#f5f5f4",
+      "description": "Very light warm grey for secondary backgrounds."
+    }
+  },
+  "visual_enhancers": {
+    "border_radius": "rounded-none md:rounded-sm",
+    "shadows": "shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)]",
+    "textures": "Subtle noise overlay on the main background to reduce digital flatness.",
+    "glassmorphism": "Use distinct 'Crystal' glass effect for sticky header: bg-white/80 backdrop-blur-md border-b border-stone-200/50."
+  },
+  "layout_strategies": {
+    "hero": {
+      "type": "Tetris Grid",
+      "description": "Asymmetrical grid. Left: Text + CTA (col-span-12 md:col-span-5). Right: Hero Image (col-span-12 md:col-span-7). Overlapping subtle badge '20+ Years Experience'."
+    },
+    "services": {
+      "type": "Bento Grid",
+      "description": "Cards with varying spans. 'Accounting' (Large), 'Legal' (Tall), 'Fiscal' (Square). Use clear icons and hover lift effects."
+    },
+    "calculators": {
+      "type": "High Density / Functional",
+      "description": "Clean, card-based interface. Left: Inputs. Right: Real-time results summary. Use monospaced fonts for numbers."
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-primary text-primary-foreground hover:bg-primary/90 rounded-sm px-8 py-3 font-medium transition-all shadow-md hover:shadow-lg uppercase tracking-wider text-xs",
+      "secondary": "border border-primary text-primary hover:bg-primary/5 rounded-sm px-8 py-3 font-medium transition-all uppercase tracking-wider text-xs"
+    },
+    "cards": {
+      "base": "bg-surface border border-stone-200 p-8 shadow-sm hover:shadow-md transition-all duration-300 group relative overflow-hidden",
+      "hover_effect": "Add a subtle 'tracing beam' or colored bottom border on hover."
+    },
+    "inputs": {
+      "style": "bg-white border-stone-200 focus:border-primary focus:ring-1 focus:ring-primary/20 h-12 rounded-sm"
+    }
+  },
+  "image_urls": [
+    {
+      "category": "Hero/Team",
+      "url": "https://images.unsplash.com/photo-1758518729463-0bb73ed899ac?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MTN8MHwxfHNlYXJjaHwzfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHdvbWVuJTIwbWVldGluZyUyMG1vZGVybiUyMG9mZmljZXxlbnwwfHx8fDE3NzM5OTEyNjF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Professional women in modern office setting - use for Hero or About section."
+    },
+    {
+      "category": "Location",
+      "url": "https://images.unsplash.com/photo-1687696162729-a75f9ddc004d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwxfHxUaW1pc29hcmElMjBSb21hbmlhJTIwVW5pcmlpJTIwU3F1YXJlJTIwbGFuZG1hcmt8ZW58MHx8fHwxNzczOTkxMjYyfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Timișoara architecture - use for Contact or Location section."
+    },
+    {
+      "category": "Service_Accounting",
+      "url": "https://images.unsplash.com/photo-1772588627354-ca3617853217?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwyfHxjYWxjdWxhdG9yJTIwZmluYW5jaWFsJTIwZG9jdW1lbnRzJTIwcGVuJTIwY2xvc2UlMjB1cHxlbnwwfHx8fDE3NzM5OTEyNjJ8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Calculator and tax forms - use for Accounting Service card."
+    },
+    {
+      "category": "Service_Legal",
+      "url": "https://images.pexels.com/photos/6077091/pexels-photo-6077091.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description": "Legal office/Gavel - use for Legal Representation service card."
+    }
+  ],
+  "accessibility_checklist": [
+    "Ensure 4.5:1 contrast for all text (Deep Teal on Warm Stone is safe).",
+    "Calculators must be keyboard navigable.",
+    "Alt text for all images.",
+    "Form labels must be visible (no placeholders as labels)."
+  ],
+  "content_strategy": {
+    "language": "Romanian",
+    "key_phrases": [
+      "Expertiză Contabilă de peste 20 de ani",
+      "Servicii Integrate: Contabilitate, Fiscalitate, Juridic",
+      "Reprezentare ANAF și Consultanță Legală",
+      "Calcul Salariu Net 2025",
+      "Optimizare Fiscală: Micro vs SRL vs PFA"
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Use Tailwind for all styling.",
+    "Implement the 'Gross-Net Salary Calculator' with 2025 logic (CAS 25%, CASS 10%, Tax 10%).",
+    "Implement the 'Tax Comparator' with a scenario-based approach (Input Revenue -> Show Taxes for Micro/SRL/PFA).",
+    "Ensure the design feels 'Established' and 'Premium' - not like a startup.",
+    "Use the provided image URLs for their respective sections.",
+    "Do not ask user for clarification. Use your best judgement for filler text in Romanian.",
+    "Use 'lucide-react' for icons (Calculator, Scale, Building, FileText)."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "You tend to converge toward generic, 'on distribution' outputs. Avoid this.",
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients.",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy.",
+    "Use glass-morphism effects with backdrop filters (12-24px blur).",
+    "You MUST NOT apply universal transition. Eg: transition: all.",
+    "You MUST NOT center align the app container.",
+    "Every interaction needs micro-animations - hover states, transitions.",
+    "Use 2-3x more spacing than feels comfortable.",
+    "Main agent relies on these image URLs. Missing categories = placeholder text which is FORBIDDEN.",
+    "Prioritize using pre-existing components from src/components/ui when applicable.",
+    "Use sonner for toasts."
+  ]
+}
