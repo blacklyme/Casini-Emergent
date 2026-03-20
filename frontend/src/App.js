@@ -1,38 +1,1122 @@
-import { useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
+import { Toaster, toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import { 
+  Calculator, 
+  Scale, 
+  Building2, 
+  FileText, 
+  Phone, 
+  Mail, 
+  MapPin, 
+  Clock, 
+  ChevronRight,
+  Users,
+  Award,
+  Shield,
+  Briefcase,
+  Gavel,
+  TrendingUp,
+  CheckCircle2,
+  Menu,
+  X
+} from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const Home = () => {
-  const helloWorldApi = async () => {
+// Contact Info
+const CONTACT = {
+  address: "Str. Cozia 1b, Timișoara",
+  phone: "+40 722 123 456",
+  email: "casini2003@yahoo.com",
+  hours: "L-V: 8-18 | Urgențe: 24/7"
+};
+
+// Navigation Component
+const Navigation = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { href: "#servicii", label: "Servicii" },
+    { href: "#certificari", label: "Certificări" },
+    { href: "#calculatoare", label: "Calculatoare" },
+    { href: "#despre", label: "Despre Noi" },
+    { href: "#contact", label: "Contact" }
+  ];
+
+  return (
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? "glass-header shadow-sm" : "bg-transparent"
+      }`}
+      data-testid="main-header"
+    >
+      <nav className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          <a href="#" className="flex items-center gap-3" data-testid="logo-link">
+            <div className="w-10 h-10 bg-[#134e4a] rounded-sm flex items-center justify-center">
+              <span className="text-white font-display font-bold text-xl">C</span>
+            </div>
+            <span className="font-display text-2xl font-semibold text-[#134e4a] tracking-tight">
+              Casini
+            </span>
+          </a>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-stone-600 hover:text-[#134e4a] transition-colors duration-200"
+                data-testid={`nav-${link.label.toLowerCase()}`}
+              >
+                {link.label}
+              </a>
+            ))}
+            <a
+              href={`tel:${CONTACT.phone}`}
+              className="bg-[#134e4a] text-white px-6 py-2.5 rounded-sm text-xs font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors duration-200"
+              data-testid="nav-call-btn"
+            >
+              Sună Acum
+            </a>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            data-testid="mobile-menu-btn"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden mt-4 pb-4 border-t border-stone-200 pt-4" data-testid="mobile-menu">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.label}
+              </a>
+            ))}
+            <a
+              href={`tel:${CONTACT.phone}`}
+              className="block mt-4 bg-[#134e4a] text-white px-6 py-3 rounded-sm text-center text-sm font-semibold uppercase tracking-wider"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Sună Acum
+            </a>
+          </div>
+        )}
+      </nav>
+    </header>
+  );
+};
+
+// Hero Section
+const HeroSection = () => {
+  return (
+    <section className="relative min-h-screen pt-24 pb-16 overflow-hidden" data-testid="hero-section">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center min-h-[calc(100vh-120px)]">
+          {/* Text Content */}
+          <div className="lg:col-span-5 space-y-8 animate-fade-in-up">
+            <div className="inline-flex items-center gap-2 bg-[#d97706]/10 text-[#d97706] px-4 py-2 rounded-sm text-sm font-semibold">
+              <Award size={16} />
+              <span>Peste 20 de ani de experiență</span>
+            </div>
+            
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-[#1c1917] leading-tight tracking-tight">
+              Expertiză Contabilă<br />
+              <span className="text-[#134e4a]">de Încredere</span>
+            </h1>
+            
+            <p className="text-lg text-stone-600 leading-relaxed max-w-lg">
+              Servicii complete de contabilitate, consultanță fiscală și reprezentare juridică 
+              pentru afacerea dumneavoastră în Timișoara și împrejurimi.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center gap-2 bg-[#134e4a] text-white px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors duration-200 shadow-lg hover:shadow-xl"
+                data-testid="hero-cta-primary"
+              >
+                Solicită Consultație
+                <ChevronRight size={16} />
+              </a>
+              <a
+                href="#calculatoare"
+                className="inline-flex items-center justify-center gap-2 border-2 border-[#134e4a] text-[#134e4a] px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#134e4a]/5 transition-colors duration-200"
+                data-testid="hero-cta-secondary"
+              >
+                <Calculator size={16} />
+                Calculatoare
+              </a>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="flex gap-8 pt-8 border-t border-stone-200">
+              <div>
+                <p className="font-display text-3xl font-bold text-[#134e4a]">20+</p>
+                <p className="text-sm text-stone-500">Ani Experiență</p>
+              </div>
+              <div>
+                <p className="font-display text-3xl font-bold text-[#134e4a]">500+</p>
+                <p className="text-sm text-stone-500">Clienți Mulțumiți</p>
+              </div>
+              <div>
+                <p className="font-display text-3xl font-bold text-[#134e4a]">100%</p>
+                <p className="text-sm text-stone-500">Dedicare</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Hero Image */}
+          <div className="lg:col-span-7 relative animate-fade-in-up animation-delay-200">
+            <div className="relative">
+              <img
+                src="https://images.unsplash.com/photo-1758518729463-0bb73ed899ac?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MTN8MHwxfHNlYXJjaHwzfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHdvbWVuJTIwbWVldGluZyUyMG1vZGVybiUyMG9mZmljZXxlbnwwfHx8fDE3NzM5OTEyNjF8MA&ixlib=rb-4.1.0&q=85"
+                alt="Echipa Casini - femei profesioniste în contabilitate"
+                className="w-full h-[500px] object-cover rounded-sm shadow-2xl"
+                data-testid="hero-image"
+              />
+              
+              {/* Floating Badge */}
+              <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-sm shadow-xl border border-stone-100">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-[#d97706]/10 rounded-full flex items-center justify-center">
+                    <Shield className="text-[#d97706]" size={24} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[#1c1917]">CECCAR</p>
+                    <p className="text-sm text-stone-500">Contabili Autorizați</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Services Section
+const ServicesSection = () => {
+  const services = [
+    {
+      icon: Calculator,
+      title: "Contabilitate",
+      description: "Servicii complete de contabilitate primară și financiară pentru toate tipurile de entități.",
+      features: ["Contabilitate primară", "Bilanțuri contabile", "Declarații fiscale", "Raportări financiare"]
+    },
+    {
+      icon: TrendingUp,
+      title: "Consultanță Fiscală",
+      description: "Optimizare fiscală legală și planificare pentru maximizarea profitului afacerii.",
+      features: ["Planificare fiscală", "Optimizare taxe", "Consultanță TVA", "Prețuri de transfer"]
+    },
+    {
+      icon: Building2,
+      title: "Reprezentare ANAF",
+      description: "Reprezentare profesională în relația cu Administrația Fiscală și alte instituții.",
+      features: ["Inspecții fiscale", "Contestații", "Solicitări documente", "Reconcilieri"]
+    },
+    {
+      icon: Gavel,
+      title: "Consultanță Juridică",
+      description: "Avocați specializați în drept comercial și fiscal, parte din echipa noastră.",
+      features: ["Drept comercial", "Drept fiscal", "Litigii", "Contracte"]
+    },
+    {
+      icon: Briefcase,
+      title: "Înființare Firme",
+      description: "Asistență completă pentru înființarea și înregistrarea societăților comerciale.",
+      features: ["SRL / SA", "PFA / II", "Sedii sociale", "Modificări acte"]
+    },
+    {
+      icon: FileText,
+      title: "Salarizare",
+      description: "Servicii complete de administrare personal și calcul salarial.",
+      features: ["State de plată", "Contracte muncă", "Revisal", "Declarații lunare"]
+    }
+  ];
+
+  return (
+    <section id="servicii" className="py-24 bg-white" data-testid="services-section">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <span className="inline-block text-[#d97706] text-sm font-semibold uppercase tracking-wider mb-4">
+            Ce Oferim
+          </span>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1c1917] mb-4">
+            Servicii Integrate
+          </h2>
+          <p className="text-stone-600 max-w-2xl mx-auto">
+            Soluții complete pentru toate nevoile contabile, fiscale și juridice ale afacerii dumneavoastră.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service, index) => (
+            <Card 
+              key={index} 
+              className="group card-hover golden-border border-stone-200 bg-white"
+              data-testid={`service-card-${index}`}
+            >
+              <CardHeader className="pb-4">
+                <div className="w-14 h-14 bg-[#134e4a]/5 rounded-sm flex items-center justify-center mb-4">
+                  <service.icon className="service-icon text-[#134e4a]" size={28} />
+                </div>
+                <CardTitle className="font-display text-xl text-[#1c1917]">
+                  {service.title}
+                </CardTitle>
+                <CardDescription className="text-stone-500">
+                  {service.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  {service.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-sm text-stone-600">
+                      <CheckCircle2 size={16} className="text-[#d97706]" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Certifications Section
+const CertificationsSection = () => {
+  const certifications = [
+    {
+      title: "CECCAR",
+      fullName: "Corpul Experților Contabili și Contabililor Autorizați din România",
+      description: "Membri activi cu drept de exercitare a profesiei de expert contabil și contabil autorizat."
+    },
+    {
+      title: "Camera Consultanților Fiscali",
+      fullName: "Consultant Fiscal Autorizat",
+      description: "Certificare pentru consultanță fiscală și reprezentare în fața autorităților fiscale."
+    },
+    {
+      title: "UNPIR",
+      fullName: "Uniunea Națională a Practicienilor în Insolvență din România",
+      description: "Specializare în proceduri de insolvență și reorganizare judiciară."
+    },
+    {
+      title: "Barou Timiș",
+      fullName: "Avocați înscriși în Baroul Timiș",
+      description: "Consultanță și reprezentare juridică prin avocați autorizați."
+    }
+  ];
+
+  return (
+    <section id="certificari" className="py-24 bg-[#fafaf9]" data-testid="certifications-section">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <span className="inline-block text-[#d97706] text-sm font-semibold uppercase tracking-wider mb-4">
+            Autorizații și Certificări
+          </span>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1c1917] mb-4">
+            Profesioniști Autorizați
+          </h2>
+          <p className="text-stone-600 max-w-2xl mx-auto">
+            Deținem toate certificările necesare pentru a oferi servicii de contabilitate, 
+            fiscalitate și consultanță juridică în România.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {certifications.map((cert, index) => (
+            <div 
+              key={index}
+              className="bg-white p-8 rounded-sm border border-stone-200 card-hover flex gap-6"
+              data-testid={`certification-${index}`}
+            >
+              <div className="flex-shrink-0">
+                <div className="w-16 h-16 bg-[#134e4a] rounded-sm flex items-center justify-center">
+                  <Award className="text-white" size={32} />
+                </div>
+              </div>
+              <div>
+                <h3 className="font-display text-xl font-semibold text-[#1c1917] mb-1">
+                  {cert.title}
+                </h3>
+                <p className="text-sm text-[#d97706] font-medium mb-2">
+                  {cert.fullName}
+                </p>
+                <p className="text-stone-600 text-sm">
+                  {cert.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Salary Calculator Component
+const SalaryCalculator = () => {
+  const [grossSalary, setGrossSalary] = useState("");
+  const [result, setResult] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const calculateSalary = async () => {
+    if (!grossSalary || parseFloat(grossSalary) <= 0) {
+      toast.error("Introduceți un salariu brut valid");
+      return;
+    }
+
+    setIsLoading(true);
     try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
+      const response = await axios.post(`${API}/calculator/salary`, {
+        gross_salary: parseFloat(grossSalary)
+      });
+      setResult(response.data);
+    } catch (error) {
+      toast.error("Eroare la calculare. Încercați din nou.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('ro-RO', {
+      style: 'currency',
+      currency: 'RON',
+      minimumFractionDigits: 2
+    }).format(value);
+  };
 
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className="space-y-6" data-testid="salary-calculator">
+      <div className="space-y-4">
+        <div>
+          <Label htmlFor="gross-salary" className="text-stone-700 font-medium">
+            Salariu Brut (RON)
+          </Label>
+          <Input
+            id="gross-salary"
+            type="number"
+            placeholder="Ex: 8000"
+            value={grossSalary}
+            onChange={(e) => setGrossSalary(e.target.value)}
+            className="mt-2 h-12 border-stone-200 focus:border-[#134e4a] focus:ring-[#134e4a]/20"
+            data-testid="gross-salary-input"
+          />
+        </div>
+        
+        <Button 
+          onClick={calculateSalary}
+          disabled={isLoading}
+          className="w-full h-12 bg-[#134e4a] hover:bg-[#0f3d3a] text-white font-semibold uppercase tracking-wider"
+          data-testid="calculate-salary-btn"
         >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
+          {isLoading ? "Se calculează..." : "Calculează Salariu Net"}
+        </Button>
+      </div>
+
+      {result && (
+        <div className="space-y-4 pt-6 border-t border-stone-200" data-testid="salary-result">
+          <div className="bg-[#134e4a] text-white p-6 rounded-sm">
+            <p className="text-sm opacity-80 mb-1">Salariu Net</p>
+            <p className="font-mono text-3xl font-bold">{formatCurrency(result.net_salary)}</p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-stone-50 p-4 rounded-sm">
+              <p className="text-xs text-stone-500 mb-1">CAS (Pensie 25%)</p>
+              <p className="font-mono text-lg font-semibold text-[#1c1917]">{formatCurrency(result.cas)}</p>
+            </div>
+            <div className="bg-stone-50 p-4 rounded-sm">
+              <p className="text-xs text-stone-500 mb-1">CASS (Sănătate 10%)</p>
+              <p className="font-mono text-lg font-semibold text-[#1c1917]">{formatCurrency(result.cass)}</p>
+            </div>
+            <div className="bg-stone-50 p-4 rounded-sm">
+              <p className="text-xs text-stone-500 mb-1">Impozit Venit (10%)</p>
+              <p className="font-mono text-lg font-semibold text-[#1c1917]">{formatCurrency(result.income_tax)}</p>
+            </div>
+            <div className="bg-stone-50 p-4 rounded-sm">
+              <p className="text-xs text-stone-500 mb-1">Total Rețineri</p>
+              <p className="font-mono text-lg font-semibold text-[#1c1917]">{formatCurrency(result.total_deductions)}</p>
+            </div>
+          </div>
+
+          <p className="text-xs text-stone-500 text-center">
+            * Calcul orientativ bazat pe legislația fiscală 2025. Pentru calcule personalizate, contactați-ne.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Tax Comparator Component
+const TaxComparator = () => {
+  const [revenue, setRevenue] = useState("");
+  const [expenses, setExpenses] = useState("");
+  const [hasEmployees, setHasEmployees] = useState(false);
+  const [result, setResult] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const compareTaxes = async () => {
+    if (!revenue || parseFloat(revenue) <= 0) {
+      toast.error("Introduceți venitul lunar");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${API}/calculator/tax-comparison`, {
+        monthly_revenue: parseFloat(revenue),
+        monthly_expenses: parseFloat(expenses) || 0,
+        has_employees: hasEmployees
+      });
+      setResult(response.data);
+    } catch (error) {
+      toast.error("Eroare la comparare. Încercați din nou.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('ro-RO', {
+      style: 'currency',
+      currency: 'RON',
+      minimumFractionDigits: 0
+    }).format(value);
+  };
+
+  return (
+    <div className="space-y-6" data-testid="tax-comparator">
+      <div className="space-y-4">
+        <div>
+          <Label htmlFor="revenue" className="text-stone-700 font-medium">
+            Venit Lunar Estimat (RON)
+          </Label>
+          <Input
+            id="revenue"
+            type="number"
+            placeholder="Ex: 20000"
+            value={revenue}
+            onChange={(e) => setRevenue(e.target.value)}
+            className="mt-2 h-12 border-stone-200 focus:border-[#134e4a] focus:ring-[#134e4a]/20"
+            data-testid="revenue-input"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="expenses" className="text-stone-700 font-medium">
+            Cheltuieli Lunare Estimate (RON)
+          </Label>
+          <Input
+            id="expenses"
+            type="number"
+            placeholder="Ex: 5000"
+            value={expenses}
+            onChange={(e) => setExpenses(e.target.value)}
+            className="mt-2 h-12 border-stone-200 focus:border-[#134e4a] focus:ring-[#134e4a]/20"
+            data-testid="expenses-input"
+          />
+        </div>
+
+        <div className="flex items-center justify-between py-2">
+          <Label htmlFor="has-employees" className="text-stone-700 font-medium cursor-pointer">
+            Aveți angajați?
+          </Label>
+          <Switch
+            id="has-employees"
+            checked={hasEmployees}
+            onCheckedChange={setHasEmployees}
+            data-testid="has-employees-switch"
+          />
+        </div>
+
+        <Button 
+          onClick={compareTaxes}
+          disabled={isLoading}
+          className="w-full h-12 bg-[#134e4a] hover:bg-[#0f3d3a] text-white font-semibold uppercase tracking-wider"
+          data-testid="compare-taxes-btn"
+        >
+          {isLoading ? "Se compară..." : "Compară Opțiunile Fiscale"}
+        </Button>
+      </div>
+
+      {result && (
+        <div className="space-y-4 pt-6 border-t border-stone-200" data-testid="tax-result">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Micro */}
+            <div className="bg-white border-2 border-stone-200 p-5 rounded-sm hover:border-[#134e4a] transition-colors">
+              <h4 className="font-display font-semibold text-[#1c1917] mb-1">{result.micro.name}</h4>
+              <p className="text-xs text-[#d97706] font-medium mb-3">Impozit: {result.micro.tax_rate}</p>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-xs text-stone-500">Net Lunar</p>
+                  <p className="font-mono text-xl font-bold text-[#134e4a]">{formatCurrency(result.micro.monthly_net)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-stone-500">Taxe Lunare</p>
+                  <p className="font-mono text-sm text-stone-600">{formatCurrency(result.micro.monthly_tax)}</p>
+                </div>
+              </div>
+              <p className="text-xs text-stone-400 mt-3">{result.micro.notes}</p>
+            </div>
+
+            {/* SRL */}
+            <div className="bg-white border-2 border-stone-200 p-5 rounded-sm hover:border-[#134e4a] transition-colors">
+              <h4 className="font-display font-semibold text-[#1c1917] mb-1">{result.srl.name}</h4>
+              <p className="text-xs text-[#d97706] font-medium mb-3">Impozit: {result.srl.tax_rate}</p>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-xs text-stone-500">Net Lunar</p>
+                  <p className="font-mono text-xl font-bold text-[#134e4a]">{formatCurrency(result.srl.monthly_net)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-stone-500">Taxe Lunare</p>
+                  <p className="font-mono text-sm text-stone-600">{formatCurrency(result.srl.monthly_tax)}</p>
+                </div>
+              </div>
+              <p className="text-xs text-stone-400 mt-3">{result.srl.notes}</p>
+            </div>
+
+            {/* PFA */}
+            <div className="bg-white border-2 border-stone-200 p-5 rounded-sm hover:border-[#134e4a] transition-colors">
+              <h4 className="font-display font-semibold text-[#1c1917] mb-1">{result.pfa.name}</h4>
+              <p className="text-xs text-[#d97706] font-medium mb-3">Impozit: {result.pfa.tax_rate}</p>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-xs text-stone-500">Net Lunar</p>
+                  <p className="font-mono text-xl font-bold text-[#134e4a]">{formatCurrency(result.pfa.monthly_net)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-stone-500">Taxe Lunare</p>
+                  <p className="font-mono text-sm text-stone-600">{formatCurrency(result.pfa.monthly_tax)}</p>
+                </div>
+              </div>
+              <p className="text-xs text-stone-400 mt-3">{result.pfa.notes}</p>
+            </div>
+          </div>
+
+          {/* Recommendation */}
+          <div className="bg-[#d97706]/10 border border-[#d97706]/20 p-4 rounded-sm">
+            <p className="text-sm text-[#1c1917] font-medium">
+              <span className="text-[#d97706]">Recomandare:</span> {result.recommendation}
+            </p>
+          </div>
+
+          <p className="text-xs text-stone-500 text-center">
+            * Calcul orientativ. Situația fiscală reală poate varia. Contactați-ne pentru o analiză personalizată.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Calculators Section
+const CalculatorsSection = () => {
+  return (
+    <section id="calculatoare" className="py-24 bg-white" data-testid="calculators-section">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <span className="inline-block text-[#d97706] text-sm font-semibold uppercase tracking-wider mb-4">
+            Instrumente Utile
+          </span>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1c1917] mb-4">
+            Calculatoare Fiscale 2025
+          </h2>
+          <p className="text-stone-600 max-w-2xl mx-auto">
+            Calculați rapid salariul net sau comparați opțiunile fiscale pentru afacerea dumneavoastră.
+          </p>
+        </div>
+
+        <div className="max-w-4xl mx-auto">
+          <Tabs defaultValue="salary" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-8 bg-stone-100 p-1 rounded-sm">
+              <TabsTrigger 
+                value="salary" 
+                className="data-[state=active]:bg-[#134e4a] data-[state=active]:text-white rounded-sm py-3 font-medium"
+                data-testid="tab-salary"
+              >
+                <Calculator size={16} className="mr-2" />
+                Calculator Salariu
+              </TabsTrigger>
+              <TabsTrigger 
+                value="tax" 
+                className="data-[state=active]:bg-[#134e4a] data-[state=active]:text-white rounded-sm py-3 font-medium"
+                data-testid="tab-tax"
+              >
+                <Scale size={16} className="mr-2" />
+                Comparator Taxe
+              </TabsTrigger>
+            </TabsList>
+
+            <Card className="border-stone-200">
+              <CardContent className="pt-6">
+                <TabsContent value="salary" className="mt-0">
+                  <div className="mb-6">
+                    <h3 className="font-display text-xl font-semibold text-[#1c1917] mb-2">
+                      Calculator Salariu Brut - Net 2025
+                    </h3>
+                    <p className="text-sm text-stone-500">
+                      Calculați salariul net din salariul brut folosind cotele de contribuții valabile în 2025.
+                    </p>
+                  </div>
+                  <SalaryCalculator />
+                </TabsContent>
+
+                <TabsContent value="tax" className="mt-0">
+                  <div className="mb-6">
+                    <h3 className="font-display text-xl font-semibold text-[#1c1917] mb-2">
+                      Comparator Micro vs SRL vs PFA
+                    </h3>
+                    <p className="text-sm text-stone-500">
+                      Comparați obligațiile fiscale pentru diferite forme de organizare juridică.
+                    </p>
+                  </div>
+                  <TaxComparator />
+                </TabsContent>
+              </CardContent>
+            </Card>
+          </Tabs>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// About Section
+const AboutSection = () => {
+  return (
+    <section id="despre" className="py-24 bg-[#fafaf9]" data-testid="about-section">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="relative">
+            <img
+              src="https://images.unsplash.com/photo-1687696162729-a75f9ddc004d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwxfHxUaW1pc29hcmElMjBSb21hbmlhJTIwVW5pcmlpJTIwU3F1YXJlJTIwbGFuZG1hcmt8ZW58MHx8fHwxNzczOTkxMjYyfDA&ixlib=rb-4.1.0&q=85"
+              alt="Timișoara - Piața Unirii"
+              className="w-full h-[400px] object-cover rounded-sm shadow-xl"
+              data-testid="about-image"
+            />
+            <div className="absolute -bottom-8 -right-8 bg-[#134e4a] text-white p-6 rounded-sm shadow-xl">
+              <p className="font-display text-4xl font-bold">2003</p>
+              <p className="text-sm opacity-80">Anul înființării</p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <span className="inline-block text-[#d97706] text-sm font-semibold uppercase tracking-wider">
+              Despre Noi
+            </span>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1c1917]">
+              O Echipă de Femei Profesioniste
+            </h2>
+            <p className="text-stone-600 leading-relaxed">
+              Casini a fost fondată în 2003 și este una dintre cele mai respectate firme de 
+              contabilitate din Timișoara. Suntem o echipă formată preponderent din femei, 
+              dedicată excelenței în serviciile de contabilitate și consultanță fiscală.
+            </p>
+            <p className="text-stone-600 leading-relaxed">
+              Cu peste 20 de ani de experiență, am construit relații de lungă durată cu 
+              clienții noștri, oferindu-le suportul necesar pentru a-și dezvolta afacerile 
+              în conformitate cu legislația în vigoare.
+            </p>
+
+            <div className="grid grid-cols-2 gap-6 pt-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-[#134e4a]/10 rounded-sm flex items-center justify-center flex-shrink-0">
+                  <Users className="text-[#134e4a]" size={24} />
+                </div>
+                <div>
+                  <p className="font-semibold text-[#1c1917]">Echipă Dedicată</p>
+                  <p className="text-sm text-stone-500">Profesioniști experimentați</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-[#134e4a]/10 rounded-sm flex items-center justify-center flex-shrink-0">
+                  <Award className="text-[#134e4a]" size={24} />
+                </div>
+                <div>
+                  <p className="font-semibold text-[#1c1917]">20+ Ani</p>
+                  <p className="text-sm text-stone-500">De experiență</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Contact Section
+const ContactSection = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    service: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleServiceChange = (value) => {
+    setFormData({ ...formData, service: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error("Completați câmpurile obligatorii");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post(`${API}/contact`, formData);
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          company: "",
+          service: "",
+          message: ""
+        });
+      }
+    } catch (error) {
+      toast.error("Eroare la trimiterea mesajului. Încercați din nou.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <section id="contact" className="py-24 bg-white" data-testid="contact-section">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Contact Info */}
+          <div className="space-y-8">
+            <div>
+              <span className="inline-block text-[#d97706] text-sm font-semibold uppercase tracking-wider mb-4">
+                Contact
+              </span>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1c1917] mb-4">
+                Hai să Discutăm
+              </h2>
+              <p className="text-stone-600">
+                Suntem aici să vă ajutăm. Contactați-ne pentru o consultație gratuită.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-[#134e4a] rounded-sm flex items-center justify-center flex-shrink-0">
+                  <MapPin className="text-white" size={20} />
+                </div>
+                <div>
+                  <p className="font-semibold text-[#1c1917]">Adresă</p>
+                  <p className="text-stone-600">{CONTACT.address}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-[#134e4a] rounded-sm flex items-center justify-center flex-shrink-0">
+                  <Phone className="text-white" size={20} />
+                </div>
+                <div>
+                  <p className="font-semibold text-[#1c1917]">Telefon</p>
+                  <a href={`tel:${CONTACT.phone}`} className="text-stone-600 hover:text-[#134e4a]">
+                    {CONTACT.phone}
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-[#134e4a] rounded-sm flex items-center justify-center flex-shrink-0">
+                  <Mail className="text-white" size={20} />
+                </div>
+                <div>
+                  <p className="font-semibold text-[#1c1917]">Email</p>
+                  <a href={`mailto:${CONTACT.email}`} className="text-stone-600 hover:text-[#134e4a]">
+                    {CONTACT.email}
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-[#134e4a] rounded-sm flex items-center justify-center flex-shrink-0">
+                  <Clock className="text-white" size={20} />
+                </div>
+                <div>
+                  <p className="font-semibold text-[#1c1917]">Program</p>
+                  <p className="text-stone-600">{CONTACT.hours}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Form */}
+          <div>
+            <Card className="border-stone-200 shadow-lg">
+              <CardHeader>
+                <CardTitle className="font-display text-xl">Trimite un Mesaj</CardTitle>
+                <CardDescription>Completează formularul și te vom contacta în cel mai scurt timp.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4" data-testid="contact-form">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="name">Nume *</Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        placeholder="Numele dumneavoastră"
+                        className="mt-1.5 h-11 border-stone-200"
+                        required
+                        data-testid="contact-name"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email">Email *</Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="email@exemplu.ro"
+                        className="mt-1.5 h-11 border-stone-200"
+                        required
+                        data-testid="contact-email"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="phone">Telefon</Label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder="+40 7XX XXX XXX"
+                        className="mt-1.5 h-11 border-stone-200"
+                        data-testid="contact-phone"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="company">Companie</Label>
+                      <Input
+                        id="company"
+                        name="company"
+                        value={formData.company}
+                        onChange={handleChange}
+                        placeholder="Numele firmei"
+                        className="mt-1.5 h-11 border-stone-200"
+                        data-testid="contact-company"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="service">Serviciu de interes</Label>
+                    <Select value={formData.service} onValueChange={handleServiceChange}>
+                      <SelectTrigger className="mt-1.5 h-11 border-stone-200" data-testid="contact-service">
+                        <SelectValue placeholder="Selectează un serviciu" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="contabilitate">Contabilitate</SelectItem>
+                        <SelectItem value="fiscalitate">Consultanță Fiscală</SelectItem>
+                        <SelectItem value="anaf">Reprezentare ANAF</SelectItem>
+                        <SelectItem value="juridic">Consultanță Juridică</SelectItem>
+                        <SelectItem value="infiintare">Înființare Firme</SelectItem>
+                        <SelectItem value="salarizare">Salarizare</SelectItem>
+                        <SelectItem value="altele">Altele</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="message">Mesaj *</Label>
+                    <Textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder="Descrieți pe scurt nevoia dumneavoastră..."
+                      className="mt-1.5 min-h-[120px] border-stone-200"
+                      required
+                      data-testid="contact-message"
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full h-12 bg-[#134e4a] hover:bg-[#0f3d3a] text-white font-semibold uppercase tracking-wider"
+                    data-testid="contact-submit"
+                  >
+                    {isSubmitting ? "Se trimite..." : "Trimite Mesajul"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Footer
+const Footer = () => {
+  return (
+    <footer className="bg-[#1c1917] text-white py-16" data-testid="footer">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          {/* Brand */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#134e4a] rounded-sm flex items-center justify-center">
+                <span className="text-white font-display font-bold text-xl">C</span>
+              </div>
+              <span className="font-display text-2xl font-semibold">Casini</span>
+            </div>
+            <p className="text-stone-400 text-sm leading-relaxed">
+              Expertiză contabilă și consultanță fiscală de peste 20 de ani în Timișoara.
+            </p>
+          </div>
+
+          {/* Services */}
+          <div>
+            <h4 className="font-semibold mb-4 text-[#d97706]">Servicii</h4>
+            <ul className="space-y-2 text-sm text-stone-400">
+              <li><a href="#servicii" className="hover:text-white transition-colors">Contabilitate</a></li>
+              <li><a href="#servicii" className="hover:text-white transition-colors">Consultanță Fiscală</a></li>
+              <li><a href="#servicii" className="hover:text-white transition-colors">Reprezentare ANAF</a></li>
+              <li><a href="#servicii" className="hover:text-white transition-colors">Consultanță Juridică</a></li>
+            </ul>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="font-semibold mb-4 text-[#d97706]">Utile</h4>
+            <ul className="space-y-2 text-sm text-stone-400">
+              <li><a href="#calculatoare" className="hover:text-white transition-colors">Calculator Salariu</a></li>
+              <li><a href="#calculatoare" className="hover:text-white transition-colors">Comparator Taxe</a></li>
+              <li><a href="#certificari" className="hover:text-white transition-colors">Certificări</a></li>
+              <li><a href="#despre" className="hover:text-white transition-colors">Despre Noi</a></li>
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="font-semibold mb-4 text-[#d97706]">Contact</h4>
+            <ul className="space-y-3 text-sm text-stone-400">
+              <li className="flex items-center gap-2">
+                <MapPin size={16} className="text-[#d97706]" />
+                {CONTACT.address}
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone size={16} className="text-[#d97706]" />
+                <a href={`tel:${CONTACT.phone}`} className="hover:text-white transition-colors">
+                  {CONTACT.phone}
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Mail size={16} className="text-[#d97706]" />
+                <a href={`mailto:${CONTACT.email}`} className="hover:text-white transition-colors">
+                  {CONTACT.email}
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Clock size={16} className="text-[#d97706]" />
+                {CONTACT.hours}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <Separator className="my-8 bg-stone-800" />
+
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-stone-500">
+          <p>&copy; {new Date().getFullYear()} Casini. Toate drepturile rezervate.</p>
+          <p>
+            Membru CECCAR | Camera Consultanților Fiscali | Baroul Timiș
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+// Main Home Component
+const Home = () => {
+  return (
+    <div className="min-h-screen bg-[#fafaf9]">
+      <div className="noise-overlay" />
+      <Navigation />
+      <main>
+        <HeroSection />
+        <ServicesSection />
+        <CertificationsSection />
+        <CalculatorsSection />
+        <AboutSection />
+        <ContactSection />
+      </main>
+      <Footer />
     </div>
   );
 };
@@ -40,11 +1124,10 @@ const Home = () => {
 function App() {
   return (
     <div className="App">
+      <Toaster position="top-right" richColors />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
+          <Route path="/" element={<Home />} />
         </Routes>
       </BrowserRouter>
     </div>
