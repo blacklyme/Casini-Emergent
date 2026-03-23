@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import "@/App.css";
-import { HashRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
@@ -1352,14 +1352,14 @@ function App() {
   return (
     <div className="App">
       <Toaster position="top-right" richColors />
-      <HashRouter>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/intrebari-frecvente" element={<FAQPage />} />
           <Route path="/politica-confidentialitate" element={<PrivacyPolicyPage />} />
           <Route path="/termeni-si-conditii" element={<TermsPage />} />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </div>
   );
 }
