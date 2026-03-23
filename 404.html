@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Casini — Redirecting</title>
+    <script>
+      // GitHub Pages SPA redirect trick
+      // When GitHub Pages gets a 404, it serves this page which redirects
+      // to index.html with the original path encoded in a query parameter.
+      // index.html then restores the correct URL using History API.
+      var pathSegmentsToKeep = 1; // Keep /Casini-Emergent/ prefix
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

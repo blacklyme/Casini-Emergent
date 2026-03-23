@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Casini-Emergent/static/css/main.3c91c6c3.css",
+    "main.js": "/Casini-Emergent/static/js/main.dc89e115.js",
+    "index.html": "/Casini-Emergent/index.html",
+    "main.3c91c6c3.css.map": "/Casini-Emergent/static/css/main.3c91c6c3.css.map",
+    "main.dc89e115.js.map": "/Casini-Emergent/static/js/main.dc89e115.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3c91c6c3.css",
+    "static/js/main.dc89e115.js"
+  ]
+}
