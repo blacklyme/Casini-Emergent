@@ -36,6 +36,7 @@ import {
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
 const API = `${BACKEND_URL}/api`;
+const BASE = process.env.PUBLIC_URL || "";
 
 // Contact Info
 const CONTACT = {
@@ -73,10 +74,10 @@ const Navigation = () => {
   }, []);
 
   const navLinks = [
-    { to: "/#servicii", label: "Servicii" },
-    { to: "/#certificari", label: "Certificări" },
-    { to: "/#despre", label: "Despre Noi" },
-    { to: "/#contact", label: "Contact" }
+    { to: `${BASE}/#servicii`, label: "Servicii" },
+    { to: `${BASE}/#certificari`, label: "Certificări" },
+    { to: `${BASE}/#despre`, label: "Despre Noi" },
+    { to: `${BASE}/#contact`, label: "Contact" }
   ];
 
   return (
@@ -172,10 +173,10 @@ const Navigation = () => {
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-stone-200 pt-4" data-testid="mobile-menu">
-            <a href="/#servicii" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            <a href={`${BASE}/#servicii`} className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Servicii
             </a>
-            <a href="/#certificari" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            <a href={`${BASE}/#certificari`} className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Certificări
             </a>
             {/* Mobile Calculatoare with sub-links */}
@@ -206,10 +207,10 @@ const Navigation = () => {
                 </Link>
               </div>
             )}
-            <a href="/#despre" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            <a href={`${BASE}/#despre`} className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Despre Noi
             </a>
-            <a href="/#contact" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            <a href={`${BASE}/#contact`} className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Contact
             </a>
             <a
@@ -251,7 +252,7 @@ const HeroSection = () => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href="/#contact"
+                href={`${BASE}/#contact`}
                 className="inline-flex items-center justify-center gap-2 bg-[#134e4a] text-white px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors duration-200 shadow-lg hover:shadow-xl"
                 data-testid="hero-cta-primary"
               >
@@ -1142,10 +1143,10 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4 text-[#d97706]">Servicii</h4>
             <ul className="space-y-2 text-sm text-stone-400">
-              <li><a href="/#servicii" className="hover:text-white transition-colors">Contabilitate</a></li>
-              <li><a href="/#servicii" className="hover:text-white transition-colors">Consultanță Fiscală</a></li>
-              <li><a href="/#servicii" className="hover:text-white transition-colors">Reprezentare ANAF</a></li>
-              <li><a href="/#servicii" className="hover:text-white transition-colors">Consultanță Juridică</a></li>
+              <li><a href={`${BASE}/#servicii`} className="hover:text-white transition-colors">Contabilitate</a></li>
+              <li><a href={`${BASE}/#servicii`} className="hover:text-white transition-colors">Consultanță Fiscală</a></li>
+              <li><a href={`${BASE}/#servicii`} className="hover:text-white transition-colors">Reprezentare ANAF</a></li>
+              <li><a href={`${BASE}/#servicii`} className="hover:text-white transition-colors">Consultanță Juridică</a></li>
             </ul>
           </div>
 
@@ -1156,7 +1157,7 @@ const Footer = () => {
               <li><Link to="/calculator-salariu" className="hover:text-white transition-colors">Calculator Salariu</Link></li>
               <li><Link to="/comparator-taxe" className="hover:text-white transition-colors">Comparator Taxe</Link></li>
               <li><Link to="/intrebari-frecvente" className="hover:text-white transition-colors">Întrebări Frecvente</Link></li>
-              <li><a href="/#despre" className="hover:text-white transition-colors">Despre Noi</a></li>
+              <li><a href={`${BASE}/#despre`} className="hover:text-white transition-colors">Despre Noi</a></li>
             </ul>
           </div>
 
@@ -1354,7 +1355,7 @@ const FAQPage = () => {
           <div className="mt-12 text-center">
             <p className="text-stone-600 mb-4">Nu ați găsit răspunsul?</p>
             <a
-              href="/#contact"
+              href={`${BASE}/#contact`}
               className="inline-flex items-center gap-2 bg-[#134e4a] text-white px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors"
             >
               Contactați-ne
@@ -1564,7 +1565,7 @@ const SalaryCalculatorPage = () => {
               Echipa Casini vă poate ajuta cu calculul salarial complet, inclusiv sporuri, bonusuri, concedii și contribuții speciale.
             </p>
             <a
-              href="/#contact"
+              href={`${BASE}/#contact`}
               className="inline-flex items-center gap-2 bg-[#134e4a] text-white px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors"
             >
               Solicită Consultație Gratuită
@@ -1765,7 +1766,7 @@ const TaxComparatorPage = () => {
               Experții contabili Casini analizează situația dumneavoastră concretă și vă recomandă varianta fiscală optimă, cu economii reale.
             </p>
             <a
-              href="/#contact"
+              href={`${BASE}/#contact`}
               className="inline-flex items-center gap-2 bg-[#134e4a] text-white px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors"
             >
               Solicită Analiză Fiscală Gratuită
