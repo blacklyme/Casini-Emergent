@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "homepage": "https://blacklyme.github.io/Casini-Emergent",
   "private": true,
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
