@@ -49,6 +49,9 @@ const CONTACT = {
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCalcDropdownOpen, setIsCalcDropdownOpen] = useState(false);
+  const [isMobileCalcOpen, setIsMobileCalcOpen] = useState(false);
+  const calcDropdownRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,16 +61,26 @@ const Navigation = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (calcDropdownRef.current && !calcDropdownRef.current.contains(e.target)) {
+        setIsCalcDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const navLinks = [
     { href: "#servicii", label: "Servicii" },
     { href: "#certificari", label: "Certificări" },
-    { href: "#calculatoare", label: "Calculatoare" },
     { href: "#despre", label: "Despre Noi" },
     { href: "#contact", label: "Contact" }
   ];
 
   return (
-    <header 
+    <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? "glass-header shadow-sm" : "bg-transparent"
       }`}
@@ -86,12 +99,53 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+            {navLinks.slice(0, 2).map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 className="text-sm font-medium text-stone-600 hover:text-[#134e4a] transition-colors duration-200"
-                data-testid={`nav-${link.label.toLowerCase()}`}
+              >
+                {link.label}
+              </a>
+            ))}
+
+            {/* Calculatoare Dropdown */}
+            <div className="relative" ref={calcDropdownRef}>
+              <button
+                onClick={() => setIsCalcDropdownOpen(!isCalcDropdownOpen)}
+                className="text-sm font-medium text-stone-600 hover:text-[#134e4a] transition-colors duration-200 flex items-center gap-1"
+                data-testid="nav-calculatoare"
+              >
+                Calculatoare
+                <ChevronRight size={14} className={`transition-transform duration-200 ${isCalcDropdownOpen ? "rotate-90" : ""}`} />
+              </button>
+              {isCalcDropdownOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-56 bg-white rounded-sm shadow-lg border border-stone-200 py-2 z-50">
+                  <Link
+                    to="/calculator-salariu"
+                    className="flex items-center gap-3 px-4 py-3 text-sm text-stone-600 hover:text-[#134e4a] hover:bg-[#134e4a]/5 transition-colors"
+                    onClick={() => setIsCalcDropdownOpen(false)}
+                  >
+                    <Calculator size={16} className="text-[#d97706]" />
+                    Calculator Salariu
+                  </Link>
+                  <Link
+                    to="/comparator-taxe"
+                    className="flex items-center gap-3 px-4 py-3 text-sm text-stone-600 hover:text-[#134e4a] hover:bg-[#134e4a]/5 transition-colors"
+                    onClick={() => setIsCalcDropdownOpen(false)}
+                  >
+                    <Scale size={16} className="text-[#d97706]" />
+                    Comparator Taxe
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {navLinks.slice(2).map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-stone-600 hover:text-[#134e4a] transition-colors duration-200"
               >
                 {link.label}
               </a>
@@ -118,16 +172,46 @@ const Navigation = () => {
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-stone-200 pt-4" data-testid="mobile-menu">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
+            <a href="#servicii" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+              Servicii
+            </a>
+            <a href="#certificari" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+              Certificări
+            </a>
+            {/* Mobile Calculatoare with sub-links */}
+            <button
+              className="w-full text-left py-3 text-stone-600 hover:text-[#134e4a] font-medium flex items-center justify-between"
+              onClick={() => setIsMobileCalcOpen(!isMobileCalcOpen)}
+            >
+              Calculatoare
+              <ChevronRight size={16} className={`transition-transform duration-200 ${isMobileCalcOpen ? "rotate-90" : ""}`} />
+            </button>
+            {isMobileCalcOpen && (
+              <div className="pl-4 border-l-2 border-[#134e4a]/20 ml-2 space-y-1">
+                <Link
+                  to="/calculator-salariu"
+                  className="flex items-center gap-2 py-2 text-sm text-stone-600 hover:text-[#134e4a]"
+                  onClick={() => { setIsMobileMenuOpen(false); setIsMobileCalcOpen(false); }}
+                >
+                  <Calculator size={14} className="text-[#d97706]" />
+                  Calculator Salariu
+                </Link>
+                <Link
+                  to="/comparator-taxe"
+                  className="flex items-center gap-2 py-2 text-sm text-stone-600 hover:text-[#134e4a]"
+                  onClick={() => { setIsMobileMenuOpen(false); setIsMobileCalcOpen(false); }}
+                >
+                  <Scale size={14} className="text-[#d97706]" />
+                  Comparator Taxe
+                </Link>
+              </div>
+            )}
+            <a href="#despre" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+              Despre Noi
+            </a>
+            <a href="#contact" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+              Contact
+            </a>
             <a
               href={`tel:${CONTACT.phone}`}
               className="block mt-4 bg-[#134e4a] text-white px-6 py-3 rounded-sm text-center text-sm font-semibold uppercase tracking-wider"
