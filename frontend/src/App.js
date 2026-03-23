@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import "@/App.css";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
@@ -34,8 +34,29 @@ import {
   X
 } from "lucide-react";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
 const API = `${BACKEND_URL}/api`;
+
+// Navigation link that works for hash anchors from any page
+const HashLink = ({ to, children, className, onClick }) => {
+  const location = useLocation();
+  const handleClick = (e) => {
+    if (onClick) onClick(e);
+    // If we're already on the homepage, just scroll to the anchor
+    if (location.pathname === "/" || location.pathname === "") {
+      e.preventDefault();
+      const id = to.replace("/#", "");
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+    // Otherwise, the Link navigates to /#section and the browser handles scrolling
+  };
+  return (
+    <Link to={to} className={className} onClick={handleClick}>
+      {children}
+    </Link>
+  );
+};
 
 // Contact Info
 const CONTACT = {
@@ -73,10 +94,10 @@ const Navigation = () => {
   }, []);
 
   const navLinks = [
-    { href: "#servicii", label: "Servicii" },
-    { href: "#certificari", label: "Certificări" },
-    { href: "#despre", label: "Despre Noi" },
-    { href: "#contact", label: "Contact" }
+    { to: "/#servicii", label: "Servicii" },
+    { to: "/#certificari", label: "Certificări" },
+    { to: "/#despre", label: "Despre Noi" },
+    { to: "/#contact", label: "Contact" }
   ];
 
   return (
@@ -88,25 +109,25 @@ const Navigation = () => {
     >
       <nav className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <a href="#" className="flex items-center gap-3" data-testid="logo-link">
+          <Link to="/" className="flex items-center gap-3" data-testid="logo-link">
             <div className="w-10 h-10 bg-[#134e4a] rounded-sm flex items-center justify-center">
               <span className="text-white font-display font-bold text-xl">C</span>
             </div>
             <span className="font-display text-2xl font-semibold text-[#134e4a] tracking-tight">
               Casini
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.slice(0, 2).map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
+              <HashLink
+                key={link.to}
+                to={link.to}
                 className="text-sm font-medium text-stone-600 hover:text-[#134e4a] transition-colors duration-200"
               >
                 {link.label}
-              </a>
+              </HashLink>
             ))}
 
             {/* Calculatoare Dropdown */}
@@ -142,13 +163,13 @@ const Navigation = () => {
             </div>
 
             {navLinks.slice(2).map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
+              <HashLink
+                key={link.to}
+                to={link.to}
                 className="text-sm font-medium text-stone-600 hover:text-[#134e4a] transition-colors duration-200"
               >
                 {link.label}
-              </a>
+              </HashLink>
             ))}
             <a
               href={`tel:${CONTACT.phone}`}
@@ -172,12 +193,12 @@ const Navigation = () => {
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-stone-200 pt-4" data-testid="mobile-menu">
-            <a href="#servicii" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            <HashLink to="/#servicii" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Servicii
-            </a>
-            <a href="#certificari" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            </HashLink>
+            <HashLink to="/#certificari" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Certificări
-            </a>
+            </HashLink>
             {/* Mobile Calculatoare with sub-links */}
             <button
               className="w-full text-left py-3 text-stone-600 hover:text-[#134e4a] font-medium flex items-center justify-between"
@@ -206,12 +227,12 @@ const Navigation = () => {
                 </Link>
               </div>
             )}
-            <a href="#despre" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            <HashLink to="/#despre" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Despre Noi
-            </a>
-            <a href="#contact" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            </HashLink>
+            <HashLink to="/#contact" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Contact
-            </a>
+            </HashLink>
             <a
               href={`tel:${CONTACT.phone}`}
               className="block mt-4 bg-[#134e4a] text-white px-6 py-3 rounded-sm text-center text-sm font-semibold uppercase tracking-wider"
@@ -250,22 +271,22 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <a
-                href="#contact"
+              <HashLink
+                to="/#contact"
                 className="inline-flex items-center justify-center gap-2 bg-[#134e4a] text-white px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors duration-200 shadow-lg hover:shadow-xl"
                 data-testid="hero-cta-primary"
               >
                 Solicită Consultație
                 <ChevronRight size={16} />
-              </a>
-              <a
-                href="#calculatoare"
+              </HashLink>
+              <Link
+                to="/calculator-salariu"
                 className="inline-flex items-center justify-center gap-2 border-2 border-[#134e4a] text-[#134e4a] px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#134e4a]/5 transition-colors duration-200"
                 data-testid="hero-cta-secondary"
               >
                 <Calculator size={16} />
                 Calculatoare
-              </a>
+              </Link>
             </div>
 
             {/* Quick Stats */}
@@ -498,7 +519,7 @@ const SalaryCalculator = () => {
       });
       setResult(response.data);
     } catch (error) {
-      toast.error("Eroare la calculare. Încercați din nou.");
+      toast.error("Serviciul de calcul nu este disponibil momentan. Contactați-ne pentru un calcul personalizat.");
     } finally {
       setIsLoading(false);
     }
@@ -598,7 +619,7 @@ const TaxComparator = () => {
       });
       setResult(response.data);
     } catch (error) {
-      toast.error("Eroare la comparare. Încercați din nou.");
+      toast.error("Serviciul de comparare nu este disponibil momentan. Contactați-ne pentru o analiză personalizată.");
     } finally {
       setIsLoading(false);
     }
@@ -991,7 +1012,7 @@ const ContactSection = () => {
             <div className="rounded-sm overflow-hidden border border-stone-200 shadow-sm">
               <iframe
                 title="Casini Contabilitate — Str. Cozia 1b, Timișoara"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2783.5!2d21.2087!3d45.7489!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sStr.+Cozia+1b%2C+Timi%C8%99oara!5e0!3m2!1sro!2sro!4v1700000000000"
+                src="https://www.google.com/maps?q=Strada+Cozia+1b,+Timișoara,+Romania&output=embed&hl=ro"
                 width="100%"
                 height="250"
                 style={{ border: 0 }}
@@ -1142,10 +1163,10 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4 text-[#d97706]">Servicii</h4>
             <ul className="space-y-2 text-sm text-stone-400">
-              <li><a href="#servicii" className="hover:text-white transition-colors">Contabilitate</a></li>
-              <li><a href="#servicii" className="hover:text-white transition-colors">Consultanță Fiscală</a></li>
-              <li><a href="#servicii" className="hover:text-white transition-colors">Reprezentare ANAF</a></li>
-              <li><a href="#servicii" className="hover:text-white transition-colors">Consultanță Juridică</a></li>
+              <li><HashLink to="/#servicii" className="hover:text-white transition-colors">Contabilitate</HashLink></li>
+              <li><HashLink to="/#servicii" className="hover:text-white transition-colors">Consultanță Fiscală</HashLink></li>
+              <li><HashLink to="/#servicii" className="hover:text-white transition-colors">Reprezentare ANAF</HashLink></li>
+              <li><HashLink to="/#servicii" className="hover:text-white transition-colors">Consultanță Juridică</HashLink></li>
             </ul>
           </div>
 
@@ -1156,7 +1177,7 @@ const Footer = () => {
               <li><Link to="/calculator-salariu" className="hover:text-white transition-colors">Calculator Salariu</Link></li>
               <li><Link to="/comparator-taxe" className="hover:text-white transition-colors">Comparator Taxe</Link></li>
               <li><Link to="/intrebari-frecvente" className="hover:text-white transition-colors">Întrebări Frecvente</Link></li>
-              <li><a href="#despre" className="hover:text-white transition-colors">Despre Noi</a></li>
+              <li><HashLink to="/#despre" className="hover:text-white transition-colors">Despre Noi</HashLink></li>
             </ul>
           </div>
 
@@ -1336,11 +1357,17 @@ const FAQPage = () => {
                     }`}
                   />
                 </button>
-                {openIndex === index && (
-                  <div className="px-6 pb-5">
-                    <p className="text-stone-600 leading-relaxed">{faq.answer}</p>
+                <div
+                  className={`grid transition-all duration-200 ease-in-out ${
+                    openIndex === index ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <div className="px-6 pb-5">
+                      <p className="text-stone-600 leading-relaxed">{faq.answer}</p>
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>
@@ -1369,6 +1396,10 @@ const PrivacyPolicyPage = () => (
       <title>Politica de Confidențialitate | Casini Contabilitate Timișoara</title>
       <meta name="description" content="Politica de confidențialitate Casini. Cum colectăm, folosim și protejăm datele dumneavoastră personale conform GDPR." />
       <link rel="canonical" href="https://www.casini.ro/politica-confidentialitate" />
+      <meta property="og:title" content="Politica de Confidențialitate | Casini Contabilitate" />
+      <meta property="og:description" content="Cum colectăm, folosim și protejăm datele dumneavoastră personale conform GDPR." />
+      <meta property="og:url" content="https://www.casini.ro/politica-confidentialitate" />
+      <meta property="og:type" content="website" />
     </Helmet>
     <div className="noise-overlay" />
     <Navigation />
@@ -1776,6 +1807,10 @@ const TermsPage = () => (
       <title>Termeni și Condiții | Casini Contabilitate Timișoara</title>
       <meta name="description" content="Termenii și condițiile de utilizare a website-ului Casini. Informații despre serviciile de contabilitate și consultanță fiscală." />
       <link rel="canonical" href="https://www.casini.ro/termeni-si-conditii" />
+      <meta property="og:title" content="Termeni și Condiții | Casini Contabilitate" />
+      <meta property="og:description" content="Termenii și condițiile de utilizare a website-ului Casini." />
+      <meta property="og:url" content="https://www.casini.ro/termeni-si-conditii" />
+      <meta property="og:type" content="website" />
     </Helmet>
     <div className="noise-overlay" />
     <Navigation />
@@ -1804,6 +1839,88 @@ const TermsPage = () => (
   </div>
 );
 
+// Cookie Consent Banner — GDPR requirement for PostHog analytics
+const CookieConsent = () => {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const consent = localStorage.getItem("casini-analytics-consent");
+    if (!consent) setVisible(true);
+  }, []);
+
+  const accept = () => {
+    localStorage.setItem("casini-analytics-consent", "accepted");
+    setVisible(false);
+    if (window.__loadPostHog) window.__loadPostHog();
+  };
+
+  const decline = () => {
+    localStorage.setItem("casini-analytics-consent", "declined");
+    setVisible(false);
+  };
+
+  if (!visible) return null;
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-[60] bg-white border-t border-stone-200 shadow-lg px-6 py-4">
+      <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <p className="text-sm text-stone-600 flex-1">
+          Acest website folosește cookie-uri analitice pentru a îmbunătăți experiența dumneavoastră.
+          Datele sunt anonimizate și nu sunt partajate cu terți.{" "}
+          <Link to="/politica-confidentialitate" className="text-[#134e4a] underline">
+            Politica de confidențialitate
+          </Link>
+        </p>
+        <div className="flex gap-3 flex-shrink-0">
+          <button
+            onClick={decline}
+            className="px-4 py-2 text-sm text-stone-600 border border-stone-300 rounded-sm hover:bg-stone-50 transition-colors"
+          >
+            Refuz
+          </button>
+          <button
+            onClick={accept}
+            className="px-4 py-2 text-sm text-white bg-[#134e4a] rounded-sm hover:bg-[#0f3d3a] transition-colors font-medium"
+          >
+            Accept
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 404 Page
+const NotFoundPage = () => (
+  <div className="min-h-screen bg-[#fafaf9]">
+    <Helmet>
+      <title>Pagina nu a fost găsită | Casini Contabilitate Timișoara</title>
+      <meta name="robots" content="noindex" />
+    </Helmet>
+    <div className="noise-overlay" />
+    <Navigation />
+    <main className="pt-28 pb-20">
+      <div className="max-w-xl mx-auto px-6 text-center">
+        <p className="font-display text-8xl font-bold text-[#134e4a]/20 mb-4">404</p>
+        <h1 className="font-display text-2xl font-bold text-[#1c1917] mb-4">
+          Pagina nu a fost găsită
+        </h1>
+        <p className="text-stone-600 mb-8">
+          Ne pare rău, pagina pe care o căutați nu există sau a fost mutată.
+        </p>
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 bg-[#134e4a] text-white px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors"
+        >
+          Înapoi la Pagina Principală
+          <ChevronRight size={16} />
+        </Link>
+      </div>
+    </main>
+    <Footer />
+  </div>
+);
+
 function App() {
   return (
     <div className="App">
@@ -1816,7 +1933,9 @@ function App() {
           <Route path="/intrebari-frecvente" element={<FAQPage />} />
           <Route path="/politica-confidentialitate" element={<PrivacyPolicyPage />} />
           <Route path="/termeni-si-conditii" element={<TermsPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        <CookieConsent />
       </BrowserRouter>
     </div>
   );
