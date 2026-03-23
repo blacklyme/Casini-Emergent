@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import "@/App.css";
-import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
@@ -36,27 +36,6 @@ import {
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
 const API = `${BACKEND_URL}/api`;
-
-// Navigation link that works for hash anchors from any page
-const HashLink = ({ to, children, className, onClick }) => {
-  const location = useLocation();
-  const handleClick = (e) => {
-    if (onClick) onClick(e);
-    // If we're already on the homepage, just scroll to the anchor
-    if (location.pathname === "/" || location.pathname === "") {
-      e.preventDefault();
-      const id = to.replace("/#", "");
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    }
-    // Otherwise, the Link navigates to /#section and the browser handles scrolling
-  };
-  return (
-    <Link to={to} className={className} onClick={handleClick}>
-      {children}
-    </Link>
-  );
-};
 
 // Contact Info
 const CONTACT = {
@@ -121,13 +100,13 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.slice(0, 2).map((link) => (
-              <HashLink
+              <a
                 key={link.to}
-                to={link.to}
+                href={link.to}
                 className="text-sm font-medium text-stone-600 hover:text-[#134e4a] transition-colors duration-200"
               >
                 {link.label}
-              </HashLink>
+              </a>
             ))}
 
             {/* Calculatoare Dropdown */}
@@ -163,13 +142,13 @@ const Navigation = () => {
             </div>
 
             {navLinks.slice(2).map((link) => (
-              <HashLink
+              <a
                 key={link.to}
-                to={link.to}
+                href={link.to}
                 className="text-sm font-medium text-stone-600 hover:text-[#134e4a] transition-colors duration-200"
               >
                 {link.label}
-              </HashLink>
+              </a>
             ))}
             <a
               href={`tel:${CONTACT.phone}`}
@@ -193,12 +172,12 @@ const Navigation = () => {
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-stone-200 pt-4" data-testid="mobile-menu">
-            <HashLink to="/#servicii" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            <a href="/#servicii" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Servicii
-            </HashLink>
-            <HashLink to="/#certificari" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            </a>
+            <a href="/#certificari" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Certificări
-            </HashLink>
+            </a>
             {/* Mobile Calculatoare with sub-links */}
             <button
               className="w-full text-left py-3 text-stone-600 hover:text-[#134e4a] font-medium flex items-center justify-between"
@@ -227,12 +206,12 @@ const Navigation = () => {
                 </Link>
               </div>
             )}
-            <HashLink to="/#despre" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            <a href="/#despre" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Despre Noi
-            </HashLink>
-            <HashLink to="/#contact" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+            </a>
+            <a href="/#contact" className="block py-3 text-stone-600 hover:text-[#134e4a] font-medium" onClick={() => setIsMobileMenuOpen(false)}>
               Contact
-            </HashLink>
+            </a>
             <a
               href={`tel:${CONTACT.phone}`}
               className="block mt-4 bg-[#134e4a] text-white px-6 py-3 rounded-sm text-center text-sm font-semibold uppercase tracking-wider"
@@ -271,14 +250,14 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <HashLink
-                to="/#contact"
+              <a
+                href="/#contact"
                 className="inline-flex items-center justify-center gap-2 bg-[#134e4a] text-white px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors duration-200 shadow-lg hover:shadow-xl"
                 data-testid="hero-cta-primary"
               >
                 Solicită Consultație
                 <ChevronRight size={16} />
-              </HashLink>
+              </a>
               <Link
                 to="/calculator-salariu"
                 className="inline-flex items-center justify-center gap-2 border-2 border-[#134e4a] text-[#134e4a] px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#134e4a]/5 transition-colors duration-200"
@@ -1163,10 +1142,10 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4 text-[#d97706]">Servicii</h4>
             <ul className="space-y-2 text-sm text-stone-400">
-              <li><HashLink to="/#servicii" className="hover:text-white transition-colors">Contabilitate</HashLink></li>
-              <li><HashLink to="/#servicii" className="hover:text-white transition-colors">Consultanță Fiscală</HashLink></li>
-              <li><HashLink to="/#servicii" className="hover:text-white transition-colors">Reprezentare ANAF</HashLink></li>
-              <li><HashLink to="/#servicii" className="hover:text-white transition-colors">Consultanță Juridică</HashLink></li>
+              <li><a href="/#servicii" className="hover:text-white transition-colors">Contabilitate</a></li>
+              <li><a href="/#servicii" className="hover:text-white transition-colors">Consultanță Fiscală</a></li>
+              <li><a href="/#servicii" className="hover:text-white transition-colors">Reprezentare ANAF</a></li>
+              <li><a href="/#servicii" className="hover:text-white transition-colors">Consultanță Juridică</a></li>
             </ul>
           </div>
 
@@ -1177,7 +1156,7 @@ const Footer = () => {
               <li><Link to="/calculator-salariu" className="hover:text-white transition-colors">Calculator Salariu</Link></li>
               <li><Link to="/comparator-taxe" className="hover:text-white transition-colors">Comparator Taxe</Link></li>
               <li><Link to="/intrebari-frecvente" className="hover:text-white transition-colors">Întrebări Frecvente</Link></li>
-              <li><HashLink to="/#despre" className="hover:text-white transition-colors">Despre Noi</HashLink></li>
+              <li><a href="/#despre" className="hover:text-white transition-colors">Despre Noi</a></li>
             </ul>
           </div>
 
