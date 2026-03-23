@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -1056,7 +1057,7 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-stone-400">
               <li><a href="#calculatoare" className="hover:text-white transition-colors">Calculator Salariu</a></li>
               <li><a href="#calculatoare" className="hover:text-white transition-colors">Comparator Taxe</a></li>
-              <li><a href="#certificari" className="hover:text-white transition-colors">Certificări</a></li>
+              <li><Link to="/intrebari-frecvente" className="hover:text-white transition-colors">Întrebări Frecvente</Link></li>
               <li><a href="#despre" className="hover:text-white transition-colors">Despre Noi</a></li>
             </ul>
           </div>
@@ -1093,9 +1094,13 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-stone-500">
           <p>&copy; {new Date().getFullYear()} Casini. Toate drepturile rezervate.</p>
-          <p>
-            Membru CECCAR | Camera Consultanților Fiscali | Baroul Timiș
-          </p>
+          <div className="flex items-center gap-4">
+            <Link to="/politica-confidentialitate" className="hover:text-white transition-colors">Confidențialitate</Link>
+            <span>|</span>
+            <Link to="/termeni-si-conditii" className="hover:text-white transition-colors">Termeni</Link>
+            <span>|</span>
+            <span>Membru CECCAR</span>
+          </div>
         </div>
       </div>
     </footer>
@@ -1106,6 +1111,11 @@ const Footer = () => {
 const Home = () => {
   return (
     <div className="min-h-screen bg-[#fafaf9]">
+      <Helmet>
+        <title>Casini — Contabilitate & Consultanță Fiscală Timișoara | Din 2003</title>
+        <meta name="description" content="Casini — firmă de contabilitate în Timișoara, fondată în 2003. Servicii complete de contabilitate, consultanță fiscală, salarizare, înființare firme și reprezentare ANAF. Membri CECCAR. Peste 500 de clienți." />
+        <link rel="canonical" href="https://www.casini.ro/" />
+      </Helmet>
       <div className="noise-overlay" />
       <Navigation />
       <main>
@@ -1121,6 +1131,223 @@ const Home = () => {
   );
 };
 
+// FAQ Page — highest GEO value (AI search engines extract Q&A content)
+const FAQPage = () => {
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const faqs = [
+    {
+      question: "Cât costă serviciile de contabilitate în Timișoara?",
+      answer: "Costul serviciilor de contabilitate variază în funcție de tipul firmei, numărul de documente și complexitatea activității. La Casini, oferim pachete personalizate începând de la 500 RON/lună pentru micro-întreprinderi și de la 800 RON/lună pentru SRL-uri cu activitate medie. Contactați-ne pentru o ofertă personalizată gratuită."
+    },
+    {
+      question: "Ce documente am nevoie pentru înființarea unui SRL?",
+      answer: "Pentru înființarea unui SRL aveți nevoie de: actele de identitate ale asociaților, dovada sediului social (contract de închiriere sau act de proprietate), specimen de semnătură, declarație pe proprie răspundere, dovada capitalului social (minim 1 RON), cererea de înregistrare la Registrul Comerțului și actul constitutiv. Casini vă asistă cu întregul proces."
+    },
+    {
+      question: "Care este diferența între micro-întreprindere și impozit pe profit?",
+      answer: "Micro-întreprinderile plătesc impozit pe venit (1% sau 3% din cifra de afaceri), nu pe profit. SRL-urile cu impozit pe profit plătesc 16% din profitul net. Micro-întreprinderea este avantajoasă când marja de profit este mare (>10-15%), iar impozitul pe profit convine când cheltuielile sunt ridicate și profitul mic. Limita pentru micro-întreprinderi este de 500.000 EUR cifră de afaceri."
+    },
+    {
+      question: "Cum se calculează salariul net din brut în 2025?",
+      answer: "Din salariul brut se rețin: CAS (contribuția la pensii) — 25%, CASS (contribuția la sănătate) — 10%, și impozitul pe venit — 10% din baza de calcul (brut - CAS - CASS - deducere personală). Exemplu: la un brut de 5.000 RON, salariul net este aproximativ 2.955 RON. Folosiți calculatorul nostru gratuit pentru calcule exacte."
+    },
+    {
+      question: "Ce este un PFA și când merită să înființezi unul?",
+      answer: "PFA (Persoană Fizică Autorizată) este o formă de organizare pentru activități independente. Merită când: lucrați ca freelancer sau consultant, aveți un singur client principal, venituri sub 100.000 EUR/an, și doriți simplitate administrativă. Dezavantajele includ răspundere nelimitată și contribuții sociale obligatorii indiferent de venit."
+    },
+    {
+      question: "Când trebuie să mă înregistrez ca plătitor de TVA?",
+      answer: "Înregistrarea ca plătitor de TVA este obligatorie când cifra de afaceri depășește plafonul de 300.000 RON (aproximativ 60.000 EUR) într-un an fiscal. Puteți opta și pentru înregistrare voluntară, avantajoasă dacă aveți clienți plătitori de TVA sau investiții mari. Casini vă ajută cu evaluarea și procedura de înregistrare."
+    },
+    {
+      question: "Ce declarații fiscale trebuie depuse lunar?",
+      answer: "Principalele declarații lunare sunt: Declarația 112 (contribuții sociale și impozit pe salarii), Declarația 300 (decontul de TVA, pentru plătitorii de TVA), și Declarația 100 (impozit pe venit micro-întreprinderi, trimestrial). Termenul general de depunere este data de 25 a lunii următoare."
+    },
+    {
+      question: "Cum aleg un contabil de încredere în Timișoara?",
+      answer: "Verificați: 1) Să fie membru CECCAR (Corpul Experților Contabili), 2) Experiența în domeniul dumneavoastră de activitate, 3) Referințe de la alți clienți, 4) Disponibilitatea pentru comunicare, 5) Transparența prețurilor. Casini este membră CECCAR din 2003, cu peste 500 de clienți și certificări multiple (Camera Consultanților Fiscali, UNPIR, Baroul Timiș)."
+    },
+    {
+      question: "Ce se întâmplă dacă nu depun declarațiile fiscale la timp?",
+      answer: "Nedepunerea declarațiilor la termen atrage amenzi între 1.000 și 5.000 RON pentru persoane juridice și între 500 și 1.000 RON pentru PFA. În plus, se calculează dobânzi și penalități de întârziere de 0,01% pe zi pentru impozitele neplătite. ANAF poate aplica și popriri pe conturi bancare."
+    },
+    {
+      question: "Casini oferă servicii de consultanță juridică?",
+      answer: "Da, echipa Casini include avocați înscriși în Baroul Timiș, specializați în drept comercial și fiscal. Oferim consultanță juridică pentru: înființare și modificare firme, contracte comerciale, litigii fiscale, reprezentare în fața instanțelor și a ANAF, proceduri de insolvență (membri UNPIR)."
+    },
+    {
+      question: "Pot să îmi schimb contabilul în cursul anului?",
+      answer: "Da, puteți schimba contabilul oricând. Procedura implică: predarea documentelor contabile de la vechiul contabil, verificarea situațiilor financiare existente și preluarea evidenței contabile. Casini asigură o tranziție lină și verifică corectitudinea documentelor preluate, fără costuri suplimentare pentru preluare."
+    },
+    {
+      question: "Ce servicii oferă Casini pentru firmele nou-înființate?",
+      answer: "Pentru start-up-uri, Casini oferă: asistență la înființare (acte constitutive, înregistrare ONRC, obținere CUI), alegerea formei optime de impozitare (micro vs. profit), înregistrare TVA (dacă este cazul), organizarea contabilității de la zero, consultanță privind obligațiile fiscale și contractele de muncă, și pachete speciale de preț pentru primul an."
+    }
+  ];
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
+  return (
+    <div className="min-h-screen bg-[#fafaf9]">
+      <Helmet>
+        <title>Întrebări Frecvente — Contabilitate & Fiscalitate | Casini Timișoara</title>
+        <meta name="description" content="Răspunsuri la cele mai frecvente întrebări despre contabilitate, fiscalitate, înființare SRL, PFA, TVA, salarizare și obligații fiscale în România. Ghid actualizat 2025." />
+        <link rel="canonical" href="https://www.casini.ro/intrebari-frecvente" />
+        <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
+      </Helmet>
+      <div className="noise-overlay" />
+      <Navigation />
+      <main className="pt-28 pb-20">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="inline-block text-[#d97706] text-sm font-semibold uppercase tracking-wider mb-4">
+              Întrebări Frecvente
+            </span>
+            <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1c1917] mb-4">
+              Ghid Contabilitate & Fiscalitate România
+            </h1>
+            <p className="text-stone-600 max-w-2xl mx-auto">
+              Răspunsuri verificate de experții contabili Casini, membri CECCAR. Actualizat pentru 2025.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {faqs.map((faq, index) => (
+              <div key={index} className="border border-stone-200 rounded-sm bg-white">
+                <button
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                  className="w-full px-6 py-5 text-left flex items-center justify-between gap-4"
+                >
+                  <h2 className="font-semibold text-[#1c1917] text-base">{faq.question}</h2>
+                  <ChevronRight
+                    size={20}
+                    className={`text-[#134e4a] flex-shrink-0 transition-transform duration-200 ${
+                      openIndex === index ? "rotate-90" : ""
+                    }`}
+                  />
+                </button>
+                {openIndex === index && (
+                  <div className="px-6 pb-5">
+                    <p className="text-stone-600 leading-relaxed">{faq.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <p className="text-stone-600 mb-4">Nu ați găsit răspunsul?</p>
+            <a
+              href="/#contact"
+              className="inline-flex items-center gap-2 bg-[#134e4a] text-white px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors"
+            >
+              Contactați-ne
+              <ChevronRight size={16} />
+            </a>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+// Privacy Policy Page
+const PrivacyPolicyPage = () => (
+  <div className="min-h-screen bg-[#fafaf9]">
+    <Helmet>
+      <title>Politica de Confidențialitate | Casini Contabilitate Timișoara</title>
+      <meta name="description" content="Politica de confidențialitate Casini. Cum colectăm, folosim și protejăm datele dumneavoastră personale conform GDPR." />
+      <link rel="canonical" href="https://www.casini.ro/politica-confidentialitate" />
+    </Helmet>
+    <div className="noise-overlay" />
+    <Navigation />
+    <main className="pt-28 pb-20">
+      <div className="max-w-3xl mx-auto px-6 prose prose-stone">
+        <h1 className="font-display text-3xl font-bold text-[#1c1917] mb-8">Politica de Confidențialitate</h1>
+        <p className="text-sm text-stone-500 mb-8">Ultima actualizare: 23 martie 2026</p>
+
+        <h2 className="font-display text-xl font-semibold text-[#1c1917] mt-8 mb-4">1. Cine suntem</h2>
+        <p className="text-stone-600 mb-4">Casini este o firmă de contabilitate și consultanță fiscală cu sediul în Timișoara, Str. Cozia 1b. Suntem operatorul datelor dumneavoastră personale colectate prin intermediul acestui website.</p>
+
+        <h2 className="font-display text-xl font-semibold text-[#1c1917] mt-8 mb-4">2. Ce date colectăm</h2>
+        <p className="text-stone-600 mb-2">Colectăm următoarele categorii de date:</p>
+        <ul className="list-disc pl-6 text-stone-600 space-y-2 mb-4">
+          <li><strong>Date din formularul de contact:</strong> nume, email, telefon, mesaj — furnizate voluntar de dumneavoastră.</li>
+          <li><strong>Date de utilizare:</strong> pagini vizitate, timp petrecut, dispozitiv — colectate prin PostHog pentru îmbunătățirea experienței.</li>
+          <li><strong>Date din calculatoare:</strong> valorile introduse în calculatoarele financiare nu sunt stocate și sunt procesate doar pentru a furniza rezultatul.</li>
+        </ul>
+
+        <h2 className="font-display text-xl font-semibold text-[#1c1917] mt-8 mb-4">3. Scopul prelucrării</h2>
+        <p className="text-stone-600 mb-4">Folosim datele pentru: răspuns la solicitări prin formularul de contact, îmbunătățirea serviciilor și a website-ului, comunicări comerciale (doar cu consimțământul dumneavoastră explicit).</p>
+
+        <h2 className="font-display text-xl font-semibold text-[#1c1917] mt-8 mb-4">4. Drepturile dumneavoastră (GDPR)</h2>
+        <p className="text-stone-600 mb-2">Conform Regulamentului General privind Protecția Datelor (GDPR), aveți dreptul la:</p>
+        <ul className="list-disc pl-6 text-stone-600 space-y-2 mb-4">
+          <li>Acces la datele personale</li>
+          <li>Rectificarea datelor inexacte</li>
+          <li>Ștergerea datelor ("dreptul de a fi uitat")</li>
+          <li>Restricționarea prelucrării</li>
+          <li>Portabilitatea datelor</li>
+          <li>Opoziția la prelucrare</li>
+        </ul>
+        <p className="text-stone-600 mb-4">Pentru exercitarea acestor drepturi, contactați-ne la: <a href="mailto:casini2003@yahoo.com" className="text-[#134e4a] hover:underline">casini2003@yahoo.com</a></p>
+
+        <h2 className="font-display text-xl font-semibold text-[#1c1917] mt-8 mb-4">5. Contact</h2>
+        <p className="text-stone-600">Pentru orice întrebări legate de protecția datelor, ne puteți contacta la adresa de email casini2003@yahoo.com sau la sediul nostru din Str. Cozia 1b, Timișoara.</p>
+      </div>
+    </main>
+    <Footer />
+  </div>
+);
+
+// Terms of Service Page
+const TermsPage = () => (
+  <div className="min-h-screen bg-[#fafaf9]">
+    <Helmet>
+      <title>Termeni și Condiții | Casini Contabilitate Timișoara</title>
+      <meta name="description" content="Termenii și condițiile de utilizare a website-ului Casini. Informații despre serviciile de contabilitate și consultanță fiscală." />
+      <link rel="canonical" href="https://www.casini.ro/termeni-si-conditii" />
+    </Helmet>
+    <div className="noise-overlay" />
+    <Navigation />
+    <main className="pt-28 pb-20">
+      <div className="max-w-3xl mx-auto px-6 prose prose-stone">
+        <h1 className="font-display text-3xl font-bold text-[#1c1917] mb-8">Termeni și Condiții</h1>
+        <p className="text-sm text-stone-500 mb-8">Ultima actualizare: 23 martie 2026</p>
+
+        <h2 className="font-display text-xl font-semibold text-[#1c1917] mt-8 mb-4">1. Informații generale</h2>
+        <p className="text-stone-600 mb-4">Acest website este operat de Casini, firmă de contabilitate și consultanță fiscală cu sediul în Timișoara, Str. Cozia 1b. Prin accesarea și utilizarea acestui website, acceptați acești termeni și condiții.</p>
+
+        <h2 className="font-display text-xl font-semibold text-[#1c1917] mt-8 mb-4">2. Serviciile oferite</h2>
+        <p className="text-stone-600 mb-4">Website-ul oferă informații despre serviciile noastre de contabilitate, consultanță fiscală, salarizare și înființare firme. Calculatoarele financiare disponibile au caracter informativ și nu constituie consultanță fiscală profesională.</p>
+
+        <h2 className="font-display text-xl font-semibold text-[#1c1917] mt-8 mb-4">3. Limitarea răspunderii</h2>
+        <p className="text-stone-600 mb-4">Rezultatele calculatoarelor financiare sunt estimative și pot diferi de calculele finale. Pentru situații concrete, vă recomandăm să ne contactați pentru o consultație personalizată. Casini nu răspunde pentru decizii luate exclusiv pe baza informațiilor de pe website.</p>
+
+        <h2 className="font-display text-xl font-semibold text-[#1c1917] mt-8 mb-4">4. Proprietatea intelectuală</h2>
+        <p className="text-stone-600 mb-4">Conținutul acestui website (texte, imagini, design, logo) este proprietatea Casini și este protejat de legislația privind drepturile de autor. Reproducerea fără acord scris este interzisă.</p>
+
+        <h2 className="font-display text-xl font-semibold text-[#1c1917] mt-8 mb-4">5. Contact</h2>
+        <p className="text-stone-600">Pentru orice întrebări, ne puteți contacta la <a href="mailto:casini2003@yahoo.com" className="text-[#134e4a] hover:underline">casini2003@yahoo.com</a> sau la telefon <a href="tel:+40722123456" className="text-[#134e4a] hover:underline">+40 722 123 456</a>.</p>
+      </div>
+    </main>
+    <Footer />
+  </div>
+);
+
 function App() {
   return (
     <div className="App">
@@ -1128,6 +1355,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/intrebari-frecvente" element={<FAQPage />} />
+          <Route path="/politica-confidentialitate" element={<PrivacyPolicyPage />} />
+          <Route path="/termeni-si-conditii" element={<TermsPage />} />
         </Routes>
       </BrowserRouter>
     </div>
