@@ -902,6 +902,20 @@ const ContactSection = () => {
                 </div>
               </div>
             </div>
+
+            {/* Google Maps */}
+            <div className="rounded-sm overflow-hidden border border-stone-200 shadow-sm">
+              <iframe
+                title="Casini Contabilitate — Str. Cozia 1b, Timișoara"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2783.5!2d21.2087!3d45.7489!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sStr.+Cozia+1b%2C+Timi%C8%99oara!5e0!3m2!1sro!2sro!4v1700000000000"
+                width="100%"
+                height="250"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </div>
 
           {/* Contact Form */}
@@ -1055,8 +1069,8 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4 text-[#d97706]">Utile</h4>
             <ul className="space-y-2 text-sm text-stone-400">
-              <li><a href="#calculatoare" className="hover:text-white transition-colors">Calculator Salariu</a></li>
-              <li><a href="#calculatoare" className="hover:text-white transition-colors">Comparator Taxe</a></li>
+              <li><Link to="/calculator-salariu" className="hover:text-white transition-colors">Calculator Salariu</Link></li>
+              <li><Link to="/comparator-taxe" className="hover:text-white transition-colors">Comparator Taxe</Link></li>
               <li><Link to="/intrebari-frecvente" className="hover:text-white transition-colors">Întrebări Frecvente</Link></li>
               <li><a href="#despre" className="hover:text-white transition-colors">Despre Noi</a></li>
             </ul>
@@ -1313,6 +1327,364 @@ const PrivacyPolicyPage = () => (
   </div>
 );
 
+// Salary Calculator Landing Page
+const SalaryCalculatorPage = () => {
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Cum calculezi salariul net din brut în România (2025)",
+    "description": "Ghid pas cu pas pentru calcularea salariului net din salariul brut, cu explicarea contribuțiilor sociale și a impozitului pe venit conform legislației fiscale 2025.",
+    "step": [
+      {"@type": "HowToStep", "name": "Introduceți salariul brut", "text": "Introduceți suma salariului brut lunar în câmpul dedicat (de exemplu, 5.000 RON)."},
+      {"@type": "HowToStep", "name": "Calculul CAS (25%)", "text": "Din salariul brut se reține contribuția la pensii (CAS) de 25%. Exemplu: 5.000 × 25% = 1.250 RON."},
+      {"@type": "HowToStep", "name": "Calculul CASS (10%)", "text": "Se reține contribuția la sănătate (CASS) de 10%. Exemplu: 5.000 × 10% = 500 RON."},
+      {"@type": "HowToStep", "name": "Calculul impozitului pe venit (10%)", "text": "Impozitul pe venit de 10% se aplică pe baza de calcul: Brut - CAS - CASS - Deducere personală. Exemplu: (5.000 - 1.250 - 500) × 10% = 325 RON."},
+      {"@type": "HowToStep", "name": "Obțineți salariul net", "text": "Salariul net = Brut - CAS - CASS - Impozit pe venit. Exemplu: 5.000 - 1.250 - 500 - 325 = 2.925 RON."}
+    ]
+  };
+
+  return (
+    <div className="min-h-screen bg-[#fafaf9]">
+      <Helmet>
+        <title>Calculator Salariu Brut - Net 2025 România | Casini Timișoara</title>
+        <meta name="description" content="Calculator salariu brut-net 2025 actualizat cu cotele din România. Calculează CAS 25%, CASS 10%, impozit pe venit 10% și salariul net. Gratuit, rapid, precis." />
+        <link rel="canonical" href="https://www.casini.ro/calculator-salariu" />
+        <script type="application/ld+json">{JSON.stringify(howToSchema)}</script>
+      </Helmet>
+      <div className="noise-overlay" />
+      <Navigation />
+      <main className="pt-28 pb-20">
+        <div className="max-w-4xl mx-auto px-6">
+          {/* Page Header */}
+          <div className="text-center mb-12">
+            <span className="inline-block text-[#d97706] text-sm font-semibold uppercase tracking-wider mb-4">
+              Instrument Gratuit
+            </span>
+            <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1c1917] mb-4">
+              Calculator Salariu Brut - Net 2025
+            </h1>
+            <p className="text-stone-600 max-w-2xl mx-auto">
+              Calculați instant salariul net din brut folosind cotele de contribuții valabile în România pentru 2025.
+              Verificat de experții contabili Casini, membri CECCAR.
+            </p>
+          </div>
+
+          {/* Calculator */}
+          <Card className="border-stone-200 shadow-lg mb-12">
+            <CardContent className="pt-6">
+              <SalaryCalculator />
+            </CardContent>
+          </Card>
+
+          {/* Educational Content */}
+          <div className="space-y-10">
+            <div>
+              <h2 className="font-display text-2xl font-bold text-[#1c1917] mb-4">
+                Cum se calculează salariul net în 2025?
+              </h2>
+              <p className="text-stone-600 leading-relaxed mb-4">
+                În România, din salariul brut se rețin trei contribuții obligatorii înainte de a ajunge la salariul net pe care îl primiți efectiv în mână. Aceste rețineri sunt stabilite prin Codul Fiscal și se aplică uniform tuturor salariaților.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-sm border border-stone-200">
+                <div className="w-12 h-12 bg-[#134e4a]/10 rounded-sm flex items-center justify-center mb-4">
+                  <span className="font-display font-bold text-[#134e4a] text-lg">25%</span>
+                </div>
+                <h3 className="font-display font-semibold text-[#1c1917] mb-2">CAS — Contribuția la Pensii</h3>
+                <p className="text-sm text-stone-600">
+                  Contribuția de asigurări sociale (CAS) de 25% din brut finanțează sistemul public de pensii. Se reține integral din salariul angajatului.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-sm border border-stone-200">
+                <div className="w-12 h-12 bg-[#134e4a]/10 rounded-sm flex items-center justify-center mb-4">
+                  <span className="font-display font-bold text-[#134e4a] text-lg">10%</span>
+                </div>
+                <h3 className="font-display font-semibold text-[#1c1917] mb-2">CASS — Contribuția la Sănătate</h3>
+                <p className="text-sm text-stone-600">
+                  Contribuția de asigurări sociale de sănătate (CASS) de 10% din brut oferă acces la serviciile medicale din sistemul public.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-sm border border-stone-200">
+                <div className="w-12 h-12 bg-[#134e4a]/10 rounded-sm flex items-center justify-center mb-4">
+                  <span className="font-display font-bold text-[#134e4a] text-lg">10%</span>
+                </div>
+                <h3 className="font-display font-semibold text-[#1c1917] mb-2">Impozit pe Venit</h3>
+                <p className="text-sm text-stone-600">
+                  Impozitul pe venit de 10% se aplică pe baza de calcul (Brut − CAS − CASS − deducere personală), nu direct pe brut.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-[#134e4a]/5 border border-[#134e4a]/10 p-6 rounded-sm">
+              <h3 className="font-display font-semibold text-[#1c1917] mb-3">Exemplu concret: Salariu brut 5.000 RON</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div>
+                  <p className="text-stone-500 mb-1">CAS (25%)</p>
+                  <p className="font-mono font-semibold text-[#1c1917]">−1.250 RON</p>
+                </div>
+                <div>
+                  <p className="text-stone-500 mb-1">CASS (10%)</p>
+                  <p className="font-mono font-semibold text-[#1c1917]">−500 RON</p>
+                </div>
+                <div>
+                  <p className="text-stone-500 mb-1">Impozit (~10%)</p>
+                  <p className="font-mono font-semibold text-[#1c1917]">−325 RON</p>
+                </div>
+                <div>
+                  <p className="text-stone-500 mb-1">Salariu Net</p>
+                  <p className="font-mono font-bold text-[#134e4a] text-lg">2.925 RON</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="font-display text-2xl font-bold text-[#1c1917] mb-4">
+                Ce este deducerea personală?
+              </h2>
+              <p className="text-stone-600 leading-relaxed mb-3">
+                Deducerea personală este o sumă scutită de impozit, acordată salariaților cu venituri brute de până la 2.000 RON. Pentru salarii între 2.001 și 4.000 RON, deducerea este degresivă. Peste 4.000 RON brut, deducerea personală este zero.
+              </p>
+              <p className="text-stone-600 leading-relaxed">
+                Deducerea crește cu 100 RON pentru fiecare persoană aflată în întreținere (copii, soț/soție fără venituri), până la maximum 4 persoane.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="font-display text-2xl font-bold text-[#1c1917] mb-4">
+                Salariu minim pe economie 2025
+              </h2>
+              <p className="text-stone-600 leading-relaxed">
+                Salariul minim brut pe economie în 2025 este de <strong>4.050 RON</strong>, ceea ce înseamnă un salariu net de aproximativ <strong>2.363 RON</strong>. Pentru sectorul construcțiilor și industria alimentară se aplică un salariu minim diferențiat.
+              </p>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="mt-12 text-center bg-white p-8 rounded-sm border border-stone-200">
+            <h3 className="font-display text-xl font-semibold text-[#1c1917] mb-3">
+              Aveți nevoie de calcule personalizate?
+            </h3>
+            <p className="text-stone-600 mb-6">
+              Echipa Casini vă poate ajuta cu calculul salarial complet, inclusiv sporuri, bonusuri, concedii și contribuții speciale.
+            </p>
+            <a
+              href="/#contact"
+              className="inline-flex items-center gap-2 bg-[#134e4a] text-white px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors"
+            >
+              Solicită Consultație Gratuită
+              <ChevronRight size={16} />
+            </a>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+// Tax Comparator Landing Page
+const TaxComparatorPage = () => {
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Cum compari regimurile fiscale Micro vs SRL vs PFA în România (2025)",
+    "description": "Ghid pentru alegerea formei optime de organizare juridică și fiscală: micro-întreprindere, SRL cu impozit pe profit, sau PFA.",
+    "step": [
+      {"@type": "HowToStep", "name": "Introduceți venitul lunar", "text": "Estimați venitul lunar brut al afacerii (cifra de afaceri lunară)."},
+      {"@type": "HowToStep", "name": "Introduceți cheltuielile", "text": "Estimați cheltuielile lunare (chirii, materiale, servicii, salarii etc.)."},
+      {"@type": "HowToStep", "name": "Indicați dacă aveți angajați", "text": "Prezența angajaților influențează eligibilitatea pentru micro-întreprindere (cotă 3% vs 1%)."},
+      {"@type": "HowToStep", "name": "Comparați rezultatele", "text": "Analizați netul lunar și taxele pentru fiecare formă juridică și alegeți varianta optimă."}
+    ]
+  };
+
+  return (
+    <div className="min-h-screen bg-[#fafaf9]">
+      <Helmet>
+        <title>Comparator Taxe: Micro vs SRL vs PFA 2025 | Casini Timișoara</title>
+        <meta name="description" content="Compară obligațiile fiscale pentru micro-întreprindere, SRL cu impozit pe profit și PFA în 2025. Calculator gratuit + ghid explicativ complet." />
+        <link rel="canonical" href="https://www.casini.ro/comparator-taxe" />
+        <script type="application/ld+json">{JSON.stringify(howToSchema)}</script>
+      </Helmet>
+      <div className="noise-overlay" />
+      <Navigation />
+      <main className="pt-28 pb-20">
+        <div className="max-w-4xl mx-auto px-6">
+          {/* Page Header */}
+          <div className="text-center mb-12">
+            <span className="inline-block text-[#d97706] text-sm font-semibold uppercase tracking-wider mb-4">
+              Instrument Gratuit
+            </span>
+            <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1c1917] mb-4">
+              Comparator Taxe: Micro vs SRL vs PFA 2025
+            </h1>
+            <p className="text-stone-600 max-w-2xl mx-auto">
+              Aflați care formă juridică este cea mai avantajoasă fiscal pentru afacerea dumneavoastră.
+              Calcul actualizat conform Codului Fiscal 2025.
+            </p>
+          </div>
+
+          {/* Calculator */}
+          <Card className="border-stone-200 shadow-lg mb-12">
+            <CardContent className="pt-6">
+              <TaxComparator />
+            </CardContent>
+          </Card>
+
+          {/* Educational Content */}
+          <div className="space-y-10">
+            <div>
+              <h2 className="font-display text-2xl font-bold text-[#1c1917] mb-4">
+                Cele 3 forme de impozitare în România
+              </h2>
+              <p className="text-stone-600 leading-relaxed mb-6">
+                Alegerea formei juridice și a regimului fiscal este una dintre cele mai importante decizii pentru un antreprenor.
+                Fiecare opțiune are avantaje și dezavantaje diferite, în funcție de cifra de afaceri, cheltuieli și planurile de dezvoltare.
+              </p>
+            </div>
+
+            {/* Comparison Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-sm border-2 border-[#d97706]/30">
+                <div className="inline-flex items-center gap-2 bg-[#d97706]/10 text-[#d97706] px-3 py-1 rounded-sm text-xs font-semibold mb-4">
+                  Cel mai popular
+                </div>
+                <h3 className="font-display text-lg font-semibold text-[#1c1917] mb-3">Micro-întreprindere</h3>
+                <p className="text-2xl font-mono font-bold text-[#134e4a] mb-4">1% sau 3%</p>
+                <ul className="space-y-2 text-sm text-stone-600">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    Impozit pe venit, nu pe profit
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    1% fără angajați, 3% cu angajați
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    Limită: 500.000 EUR CA/an
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    Ideal pentru marje mari de profit
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-white p-6 rounded-sm border border-stone-200">
+                <div className="inline-flex items-center gap-2 bg-stone-100 text-stone-600 px-3 py-1 rounded-sm text-xs font-semibold mb-4">
+                  Cheltuieli mari
+                </div>
+                <h3 className="font-display text-lg font-semibold text-[#1c1917] mb-3">SRL — Impozit pe Profit</h3>
+                <p className="text-2xl font-mono font-bold text-[#134e4a] mb-4">16%</p>
+                <ul className="space-y-2 text-sm text-stone-600">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    Impozit pe profit (venit − cheltuieli)
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    Cheltuielile reduc baza impozabilă
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    Fără limită de cifră de afaceri
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    Ideal pentru cheltuieli ridicate
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-white p-6 rounded-sm border border-stone-200">
+                <div className="inline-flex items-center gap-2 bg-stone-100 text-stone-600 px-3 py-1 rounded-sm text-xs font-semibold mb-4">
+                  Freelanceri
+                </div>
+                <h3 className="font-display text-lg font-semibold text-[#1c1917] mb-3">PFA — Persoană Fizică</h3>
+                <p className="text-2xl font-mono font-bold text-[#134e4a] mb-4">10%</p>
+                <ul className="space-y-2 text-sm text-stone-600">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    Impozit 10% pe venitul net
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    CAS 25% + CASS 10% obligatorii
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    Răspundere nelimitată
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-[#d97706] mt-0.5 flex-shrink-0" />
+                    Administrare simplă
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-[#134e4a]/5 border border-[#134e4a]/10 p-6 rounded-sm">
+              <h3 className="font-display font-semibold text-[#1c1917] mb-3">Când să alegi fiecare variantă?</h3>
+              <div className="space-y-3 text-sm text-stone-600">
+                <p><strong className="text-[#1c1917]">Micro-întreprindere</strong> — Marja de profit peste 15%, cifra de afaceri sub 500.000 EUR. Cele mai multe firme mici și mijlocii din România sunt micro-întreprinderi.</p>
+                <p><strong className="text-[#1c1917]">SRL cu impozit pe profit</strong> — Cheltuieli mari (peste 60-70% din venituri), activități de producție sau prestări servicii cu costuri ridicate, sau depășirea plafonului de micro.</p>
+                <p><strong className="text-[#1c1917]">PFA</strong> — Freelanceri, consultanți, activități cu un singur client, venituri sub 100.000 EUR/an, fără necesitatea protecției de răspundere limitată.</p>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="font-display text-2xl font-bold text-[#1c1917] mb-4">
+                Modificări Cod Fiscal 2025
+              </h2>
+              <p className="text-stone-600 leading-relaxed mb-3">
+                Principalele modificări fiscale din 2025 care afectează alegerea formei juridice:
+              </p>
+              <ul className="space-y-2 text-stone-600">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={16} className="text-[#d97706] mt-1 flex-shrink-0" />
+                  Plafonul pentru micro-întreprinderi rămâne la 500.000 EUR cifră de afaceri anuală
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={16} className="text-[#d97706] mt-1 flex-shrink-0" />
+                  Cotele de impozit pe veniturile micro: 1% (fără angajați) și 3% (cu angajați)
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={16} className="text-[#d97706] mt-1 flex-shrink-0" />
+                  Impozitul pe dividende rămâne 8%
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={16} className="text-[#d97706] mt-1 flex-shrink-0" />
+                  Contribuțiile sociale CAS (25%) și CASS (10%) rămân neschimbate
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="mt-12 text-center bg-white p-8 rounded-sm border border-stone-200">
+            <h3 className="font-display text-xl font-semibold text-[#1c1917] mb-3">
+              Nu sunteți sigur ce formă juridică vi se potrivește?
+            </h3>
+            <p className="text-stone-600 mb-6">
+              Experții contabili Casini analizează situația dumneavoastră concretă și vă recomandă varianta fiscală optimă, cu economii reale.
+            </p>
+            <a
+              href="/#contact"
+              className="inline-flex items-center gap-2 bg-[#134e4a] text-white px-8 py-4 rounded-sm text-sm font-semibold uppercase tracking-wider hover:bg-[#0f3d3a] transition-colors"
+            >
+              Solicită Analiză Fiscală Gratuită
+              <ChevronRight size={16} />
+            </a>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
 // Terms of Service Page
 const TermsPage = () => (
   <div className="min-h-screen bg-[#fafaf9]">
@@ -1355,6 +1727,8 @@ function App() {
       <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/calculator-salariu" element={<SalaryCalculatorPage />} />
+          <Route path="/comparator-taxe" element={<TaxComparatorPage />} />
           <Route path="/intrebari-frecvente" element={<FAQPage />} />
           <Route path="/politica-confidentialitate" element={<PrivacyPolicyPage />} />
           <Route path="/termeni-si-conditii" element={<TermsPage />} />
