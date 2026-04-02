@@ -1201,6 +1201,16 @@ const Footer = () => {
             <span>Membru CECCAR</span>
           </div>
         </div>
+
+        <Separator className="my-6 bg-gradient-to-r from-transparent via-stone-700 to-transparent h-px border-0" />
+        <a
+          href="https://mustache88.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block text-center text-[10px] uppercase tracking-[0.2em] text-[#d97706] opacity-60 hover:opacity-100 transition-all duration-300 no-underline"
+        >
+          Built by Mustache88 &rarr;
+        </a>
       </div>
     </footer>
   );
